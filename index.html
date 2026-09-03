@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dilip Mudiraj | Official Portfolio</title>
+
+  <!-- బ్రౌజర్‌లో వేగంగా వెతకడానికి & సజెషన్స్ రావడానికి SEO Tags -->
+  <meta name="description" content="Dilip Mudiraj Official Website - Portfolio, Photos, and Updates.">
+  <meta name="keywords" content="dilip, dilip mudiraj, dilipmudiraj, dilip_mudiraj_ns_lover">
+  <meta name="author" content="Dilip Mudiraj">
+  <link rel="canonical" href="https://dilip-mudiraj.github.io/">
+
+  <!-- వెబ్‌సైట్ రెప్పపాటులో లోడ్ అవ్వడానికి Speed Optimization -->
+  <meta http-equiv="Cache-Control" content="max-age=31536000, must-revalidate">
+  <link rel="preconnect" href="https://images.unsplash.com">
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { 
@@ -173,10 +184,6 @@
 
   <script>
     let isOwnerLoggedIn = false;
-    
-    // ఆన్‌లైన్ డేటాబేస్ కీస్ (ఉచిత గ్లోబల్ స్టోరేజ్)
-    const BIN_ID = "66f12a2ee41b4d34e4369ef0"; // డెడికేటెడ్ క్లౌడ్ స్టోరేజ్ ఐడీ
-    const API_KEY = "$2a$10$7vIqK0Yq3U6Kj5F2HqYf8.bE2Qp6Hq6Yh0p9Hq2vN7c3U6Kj5F2Hq";
 
     function openOwnerPanel() {
       const pin = prompt("యజమాని పాస్‌వర్డ్ (3386) ఎంటర్ చేయండి:");
@@ -184,23 +191,21 @@
         isOwnerLoggedIn = true;
         document.getElementById('admin-panel').style.display = 'block';
         document.querySelectorAll('.delete-btn').forEach(btn => btn.style.display = 'block');
-        alert("లాగిన్ విజయవంతమైంది! మీరు టెక్స్ట్ లేదా ఫైల్స్ పోస్ట్ చేయవచ్చు.");
+        alert("లాగిన్ విజయవంతమైంది!");
       } else if (pin !== null) {
         alert("తప్పు పాస్‌వర్డ్!");
       }
     }
 
-    // పేజీ లోడ్ అయిన వెంటనే ఆన్‌లైన్ నుండి పోస్టులు తెచ్చుకోవడం
     window.addEventListener('DOMContentLoaded', loadAllPosts);
 
-    async function loadAllPosts() {
+    function loadAllPosts() {
       const postsArea = document.getElementById('posts-container');
       const savedLocal = localStorage.getItem('dilip_website_posts');
       
       if (savedLocal) {
         renderPosts(JSON.parse(savedLocal));
       } else {
-        // డిఫాల్ట్ మొదటి పోస్ట్
         postsArea.innerHTML = `
           <div class="post-card">
             <div class="media-box">
@@ -231,7 +236,6 @@
       let mediaUrl = "";
       let isVideo = false;
 
-      // ఫైల్ ఉంటే అప్‌లోడ్ చేయడం
       if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
         isVideo = file.type.startsWith('video/');
@@ -255,7 +259,6 @@
         isVideo: isVideo
       };
 
-      // పోస్టులను లోకల్ మరియు క్లౌడ్ డేటాకు కలపడం
       let currentPosts = JSON.parse(localStorage.getItem('dilip_website_posts') || '[]');
       currentPosts.unshift(newPost);
       localStorage.setItem('dilip_website_posts', JSON.stringify(currentPosts));
