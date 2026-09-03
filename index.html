@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dilip Mudiraj | Official Site</title>
+  <title>Dilip Mudiraj | Official Portfolio</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-    body { background: #0b0f19; color: #f8fafc; padding-bottom: 70px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { 
+      background: #0b0f19; 
+      color: #f8fafc; 
+      padding-bottom: 80px; 
+      user-select: none; 
+      -webkit-user-select: none; 
+    }
 
-    /* Top Bar */
+    /* Top Navigation */
     header {
       background: #111827;
       padding: 14px 18px;
@@ -33,7 +39,7 @@
 
     .container { max-width: 480px; margin: 20px auto; padding: 0 15px; }
 
-    /* Instagram Banner Card */
+    /* Instagram Banner */
     .profile-card {
       background: #111827;
       border-radius: 14px;
@@ -60,7 +66,7 @@
       box-shadow: 0 4px 12px rgba(220, 39, 67, 0.35);
     }
 
-    /* Secret Post Box (Only Owner) */
+    /* Secret Post Box (Only visible to Owner after login) */
     #admin-panel {
       display: none;
       background: #1e293b;
@@ -94,7 +100,7 @@
       cursor: pointer;
     }
 
-    /* Posts Feed */
+    /* Feed Posts */
     .feed-heading { font-size: 15px; color: #94a3b8; margin-bottom: 12px; font-weight: 600; }
     .post-card {
       background: #111827;
@@ -104,7 +110,22 @@
       border: 1px solid #1f2937;
       position: relative;
     }
-    .post-card img, .post-card video { width: 100%; display: block; max-height: 450px; object-fit: cover; }
+
+    /* Media Anti-Download Protection */
+    .media-box {
+      position: relative;
+      width: 100%;
+      background: #000;
+    }
+    .post-card img, .post-card video {
+      width: 100%;
+      display: block;
+      max-height: 450px;
+      object-fit: cover;
+      pointer-events: auto;
+      -webkit-touch-callout: none; /* లాంగ్ ప్రెస్ చేస్తే సేవ్ రాకుండా */
+    }
+
     .post-footer {
       padding: 14px 16px;
       display: flex;
@@ -113,14 +134,14 @@
       gap: 10px;
     }
     .post-text { font-size: 14px; line-height: 1.5; color: #e5e7eb; flex: 1; }
-    
-    /* Delete Button (కేవలం అడ్మిన్ లాగిన్ అయినప్పుడే కనిపిస్తుంది) */
+
+    /* Delete Button (Only for Admin) */
     .delete-btn {
       display: none;
       background: #ef4444;
       color: white;
       border: none;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 6px;
       font-size: 12px;
       cursor: pointer;
@@ -128,7 +149,7 @@
     }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
   <!-- HEADER -->
   <header>
@@ -138,32 +159,34 @@
 
   <div class="container">
 
-    <!-- INSTAGRAM MAIN SECTION -->
+    <!-- INSTAGRAM SECTION -->
     <div class="profile-card">
       <h2>Dilip Mudiraj</h2>
-      <p>Welcome to my official space. Visit my Instagram below:</p>
+      <p>Welcome to my official portfolio. Check out my Instagram below:</p>
       <a href="https://www.instagram.com/dilip_mudiraj_ns_lover" target="_blank" class="insta-button">
-        📸 View My Instagram Profile
+        📸 Visit My Instagram Profile
       </a>
     </div>
 
-    <!-- SECRET ADMIN DESK (మీరు పాస్‌వర్డ్ ఇస్తేనే ఓపెన్ అవుతుంది) -->
+    <!-- SECRET OWNER DESK (Only visible to you) -->
     <div id="admin-panel">
-      <h3>Owner Secret Desk: Add New Post</h3>
-      <textarea id="captionText" placeholder="మీరు రాయాలనుకుంటున్న విషయం ఇక్కడ టైప్ చేయండి..."></textarea>
+      <h3>Owner Only: Upload Photo / Video</h3>
+      <textarea id="captionText" placeholder="వివరణ లేదా క్యాప్షన్ రాయండి..."></textarea>
       <input type="file" id="mediaUpload" accept="image/*,video/*" class="file-input">
-      <button class="publish-btn" onclick="publishPost()">Post Now</button>
+      <button class="publish-btn" onclick="publishPost()">Post to Website</button>
     </div>
 
-    <!-- PUBLIC POSTS (అందరూ చూసే పోస్టులు) -->
-    <div class="feed-heading">Recent Updates & Gallery</div>
+    <!-- PUBLIC POSTS FEED -->
+    <div class="feed-heading">Gallery & Updates</div>
     <div id="posts-container">
       
       <!-- మొదటి డిఫాల్ట్ పోస్ట్ -->
       <div class="post-card">
-        <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" alt="Post photo">
+        <div class="media-box">
+          <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" alt="Official Photo" oncontextmenu="return false;">
+        </div>
         <div class="post-footer">
-          <div class="post-text">నా అఫీషియల్ వెబ్‌సైట్‌కి స్వాగతం! నా తాజా ఫోటోలు, వీడియోల కోసం పైన ఉన్న బటన్ ద్వారా నా Instagram పేజీని చూడండి.</div>
+          <div class="post-text">నా అఫీషియల్ వెబ్‌సైట్‌కి స్వాగతం! మరిన్ని ఫోటోలు మరియు వీడియోల కోసం పైన ఉన్న బటన్ ద్వారా నా Instagram పేజీని చూడండి.</div>
           <button class="delete-btn" onclick="deletePost(this)">Delete</button>
         </div>
       </div>
@@ -175,20 +198,20 @@
   <script>
     let isOwnerLoggedIn = false;
 
-    // కేవలం మీ కోసం మాత్రమే పాస్‌వర్డ్ (1234)
+    // మీ కొత్త సీక్రెట్ పాస్‌వర్డ్: 3386
     function openOwnerPanel() {
       const pin = prompt("యజమాని పాస్‌వర్డ్ (Owner Password) ఎంటర్ చేయండి:");
-      if (pin === "1234") {
+      if (pin === "3386") {
         isOwnerLoggedIn = true;
         document.getElementById('admin-panel').style.display = 'block';
         
-        // అన్ని పోస్టుల కింద Delete బటన్లు కనిపించేలా చేయడం
+        // లాగిన్ అయ్యాక మాత్రమే డిలీట్ బటన్లు కనిపిస్తాయి
         const delBtns = document.querySelectorAll('.delete-btn');
         delBtns.forEach(btn => btn.style.display = 'block');
 
-        alert("లాగిన్ అయ్యారు! మీరు పోస్ట్ చేయవచ్చు మరియు అక్కర్లేని పోస్ట్‌లను 'Delete' బటన్ నొక్కి తీసివేయవచ్చు.");
+        alert("లాగిన్ విజయవంతమైంది! మీరు కొత్త ఫోటోలు/వీడియోలు పెట్టవచ్చు, అక్కర్లేనివి డిలీట్ చేయవచ్చు.");
       } else if (pin !== null) {
-        alert("తప్పు పాస్‌వర్డ్! సందర్శకులకు ఈ అనుమతి లేదు.");
+        alert("తప్పు పాస్‌వర్డ్! సందర్శకులకు అప్‌లోడ్ లేదా డిలీట్ చేసే అనుమతి లేదు.");
       }
     }
 
@@ -209,14 +232,21 @@
       if (fileInput.files.length > 0) {
         const selectedFile = fileInput.files[0];
         const mediaUrl = URL.createObjectURL(selectedFile);
+        
+        // వీడియోలకి డౌన్‌లోడ్ ఆప్షన్ లేకుండా లాక్ (controlsList="nodownload")
         if (selectedFile.type.startsWith('video/')) {
-          mediaContent = `<video src="${mediaUrl}" controls></video>`;
+          mediaContent = `
+            <div class="media-box">
+              <video src="${mediaUrl}" controls controlsList="nodownload" oncontextmenu="return false;"></video>
+            </div>`;
         } else {
-          mediaContent = `<img src="${mediaUrl}">`;
+          mediaContent = `
+            <div class="media-box">
+              <img src="${mediaUrl}" oncontextmenu="return false;">
+            </div>`;
         }
       }
 
-      // లాగిన్ అయి ఉన్నారు కాబట్టి కొత్త పోస్ట్‌కి డిలీట్ బటన్ ఆటోమేటిక్‌గా వస్తుంది
       const displayStyle = isOwnerLoggedIn ? 'block' : 'none';
 
       postBox.innerHTML = `
@@ -234,15 +264,16 @@
       alert("పోస్ట్ విజయవంతంగా యాడ్ అయింది!");
     }
 
-    // పోస్ట్‌ను పూర్తిగా తొలగించే ఫంక్షన్
     function deletePost(button) {
-      const confirmDelete = confirm("ఈ పోస్ట్‌ను నిజంగానే డిలీట్ చేయాలనుకుంటున్నారా?");
-      if (confirmDelete) {
+      if (confirm("ఈ పోస్ట్‌ను డిలీట్ చేయాలనుకుంటున్నారా?")) {
         const postCard = button.closest('.post-card');
         postCard.remove();
-        alert("పోస్ట్ పూర్తిగా తొలగించబడింది!");
+        alert("పోస్ట్ తొలగించబడింది!");
       }
     }
+
+    // ఎవరూ రైట్ క్లిక్ లేదా లాంగ్ ప్రెస్ చేయకుండా లాక్ చేయడం
+    document.addEventListener('contextmenu', event => event.preventDefault());
   </script>
 
 </body>
