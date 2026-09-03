@@ -3,152 +3,247 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login & Website</title>
+  <title>Dilip Mudiraj | Official Site</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-    
-    /* 1. Login Page Styles */
-    #login-page {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #df7e51;
-    }
-    .login-card {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      padding: 30px;
-      border-radius: 14px;
-      width: 85%;
-      max-width: 320px;
-      text-align: center;
-      color: white;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
-    .login-card h2 { margin-bottom: 8px; font-size: 22px; }
-    .login-card p { font-size: 12px; margin-bottom: 18px; opacity: 0.9; }
-    .input-box {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 6px;
-      outline: none;
-      font-size: 14px;
-      background: #ffffff;
-      color: #333;
-    }
-    .btn {
-      width: 100%;
-      padding: 12px;
-      background: #ea580c;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-    }
+    body { background: #0b0f19; color: #f8fafc; padding-bottom: 70px; }
 
-    /* 2. Main Website Styles */
-    #main-website {
-      display: none;
-      min-height: 100vh;
-      background: #0f172a;
-      color: white;
-    }
+    /* Top Bar */
     header {
-      background: #1e293b;
-      padding: 15px 20px;
+      background: #111827;
+      padding: 14px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #334155;
+      border-bottom: 1px solid #1f2937;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .brand { font-size: 18px; font-weight: bold; color: #38bdf8; }
-    .logout-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
+    .brand { font-size: 17px; font-weight: bold; color: #38bdf8; letter-spacing: 0.5px; }
+    .owner-btn {
+      background: #1f2937;
+      color: #94a3b8;
+      border: 1px solid #374151;
       padding: 6px 12px;
       border-radius: 6px;
       font-size: 12px;
       cursor: pointer;
     }
-    .content {
-      padding: 40px 20px;
+
+    .container { max-width: 480px; margin: 20px auto; padding: 0 15px; }
+
+    /* Instagram Banner Card */
+    .profile-card {
+      background: #111827;
+      border-radius: 14px;
+      padding: 22px 18px;
       text-align: center;
+      margin-bottom: 22px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    .content h1 { font-size: 24px; color: #f8fafc; margin-bottom: 8px; }
-    .content p { color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
-    .box {
-      background: #1e293b;
-      padding: 20px;
+    .profile-card h2 { font-size: 22px; margin-bottom: 6px; color: #fff; }
+    .profile-card p { color: #9ca3af; font-size: 13px; margin-bottom: 18px; }
+    .insta-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 12px 18px;
       border-radius: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #334155;
-      text-align: left;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(220, 39, 67, 0.35);
     }
-    .box h3 { color: #38bdf8; font-size: 16px; margin-bottom: 6px; }
-    .box p { color: #cbd5e1; font-size: 13px; line-height: 1.5; }
+
+    /* Secret Post Box (Only Owner) */
+    #admin-panel {
+      display: none;
+      background: #1e293b;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      border: 2px solid #38bdf8;
+    }
+    #admin-panel h3 { font-size: 14px; margin-bottom: 10px; color: #38bdf8; }
+    textarea {
+      width: 100%;
+      height: 75px;
+      padding: 10px;
+      background: #0b0f19;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      color: white;
+      margin-bottom: 10px;
+      outline: none;
+      font-size: 13px;
+    }
+    .file-input { margin-bottom: 12px; font-size: 12px; color: #9ca3af; width: 100%; }
+    .publish-btn {
+      width: 100%;
+      padding: 10px;
+      background: #38bdf8;
+      border: none;
+      border-radius: 8px;
+      color: #0b0f19;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Posts Feed */
+    .feed-heading { font-size: 15px; color: #94a3b8; margin-bottom: 12px; font-weight: 600; }
+    .post-card {
+      background: #111827;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 18px;
+      border: 1px solid #1f2937;
+      position: relative;
+    }
+    .post-card img, .post-card video { width: 100%; display: block; max-height: 450px; object-fit: cover; }
+    .post-footer {
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .post-text { font-size: 14px; line-height: 1.5; color: #e5e7eb; flex: 1; }
+    
+    /* Delete Button (కేవలం అడ్మిన్ లాగిన్ అయినప్పుడే కనిపిస్తుంది) */
+    .delete-btn {
+      display: none;
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
 
-  <div id="login-page">
-    <div class="login-card">
-      <div style="font-size: 50px; margin-bottom: 10px;">🚶‍♂️🧳</div>
-      <h2>Welcome Back</h2>
-      <p>Enter details to access your portal</p>
+  <!-- HEADER -->
+  <header>
+    <div class="brand">DILIP MUDIRAJ</div>
+    <button class="owner-btn" onclick="openOwnerPanel()">Admin Login</button>
+  </header>
+
+  <div class="container">
+
+    <!-- INSTAGRAM MAIN SECTION -->
+    <div class="profile-card">
+      <h2>Dilip Mudiraj</h2>
+      <p>Welcome to my official space. Visit my Instagram below:</p>
+      <a href="https://www.instagram.com/dilip_mudiraj_ns_lover" target="_blank" class="insta-button">
+        📸 View My Instagram Profile
+      </a>
+    </div>
+
+    <!-- SECRET ADMIN DESK (మీరు పాస్‌వర్డ్ ఇస్తేనే ఓపెన్ అవుతుంది) -->
+    <div id="admin-panel">
+      <h3>Owner Secret Desk: Add New Post</h3>
+      <textarea id="captionText" placeholder="మీరు రాయాలనుకుంటున్న విషయం ఇక్కడ టైప్ చేయండి..."></textarea>
+      <input type="file" id="mediaUpload" accept="image/*,video/*" class="file-input">
+      <button class="publish-btn" onclick="publishPost()">Post Now</button>
+    </div>
+
+    <!-- PUBLIC POSTS (అందరూ చూసే పోస్టులు) -->
+    <div class="feed-heading">Recent Updates & Gallery</div>
+    <div id="posts-container">
       
-      <form onsubmit="openWebsite(event)">
-        <input type="text" class="input-box" placeholder="Username" required>
-        <input type="password" class="input-box" placeholder="Password" required>
-        <button type="submit" class="btn">LOGIN</button>
-      </form>
-    </div>
-  </div>
-
-  <div id="main-website">
-    <header>
-      <div class="brand">DILIP'S PORTAL</div>
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </header>
-
-    <div class="content">
-      <h1>Welcome to My Website</h1>
-      <p>Official portfolio and dashboard</p>
-
-      <div class="box">
-        <h3>📷 Photography</h3>
-        <p>Portfolio of creative portrait shots and photo edits.</p>
+      <!-- మొదటి డిఫాల్ట్ పోస్ట్ -->
+      <div class="post-card">
+        <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" alt="Post photo">
+        <div class="post-footer">
+          <div class="post-text">నా అఫీషియల్ వెబ్‌సైట్‌కి స్వాగతం! నా తాజా ఫోటోలు, వీడియోల కోసం పైన ఉన్న బటన్ ద్వారా నా Instagram పేజీని చూడండి.</div>
+          <button class="delete-btn" onclick="deletePost(this)">Delete</button>
+        </div>
       </div>
 
-      <div class="box">
-        <h3>💻 Web Development</h3>
-        <p>Built and hosted directly using mobile Termux environment.</p>
-      </div>
     </div>
+
   </div>
 
   <script>
-    function openWebsite(e) {
-      e.preventDefault();
-      // ఇక్కడ ఎలాంటి చెకింగ్ లేకుండా నేరుగా వెబ్‌సైట్ ఓపెన్ అవుతుంది
-      document.getElementById('login-page').style.display = 'none';
-      document.getElementById('main-website').style.display = 'block';
+    let isOwnerLoggedIn = false;
+
+    // కేవలం మీ కోసం మాత్రమే పాస్‌వర్డ్ (1234)
+    function openOwnerPanel() {
+      const pin = prompt("యజమాని పాస్‌వర్డ్ (Owner Password) ఎంటర్ చేయండి:");
+      if (pin === "1234") {
+        isOwnerLoggedIn = true;
+        document.getElementById('admin-panel').style.display = 'block';
+        
+        // అన్ని పోస్టుల కింద Delete బటన్లు కనిపించేలా చేయడం
+        const delBtns = document.querySelectorAll('.delete-btn');
+        delBtns.forEach(btn => btn.style.display = 'block');
+
+        alert("లాగిన్ అయ్యారు! మీరు పోస్ట్ చేయవచ్చు మరియు అక్కర్లేని పోస్ట్‌లను 'Delete' బటన్ నొక్కి తీసివేయవచ్చు.");
+      } else if (pin !== null) {
+        alert("తప్పు పాస్‌వర్డ్! సందర్శకులకు ఈ అనుమతి లేదు.");
+      }
     }
 
-    function logout() {
-      document.getElementById('main-website').style.display = 'none';
-      document.getElementById('login-page').style.display = 'flex';
+    function publishPost() {
+      const text = document.getElementById('captionText').value;
+      const fileInput = document.getElementById('mediaUpload');
+      const postsArea = document.getElementById('posts-container');
+
+      if (!text && fileInput.files.length === 0) {
+        alert("దయచేసి ఏదైనా రాయండి లేదా ఫోటో/వీడియో సెలెక్ట్ చేయండి!");
+        return;
+      }
+
+      const postBox = document.createElement('div');
+      postBox.className = 'post-card';
+
+      let mediaContent = '';
+      if (fileInput.files.length > 0) {
+        const selectedFile = fileInput.files[0];
+        const mediaUrl = URL.createObjectURL(selectedFile);
+        if (selectedFile.type.startsWith('video/')) {
+          mediaContent = `<video src="${mediaUrl}" controls></video>`;
+        } else {
+          mediaContent = `<img src="${mediaUrl}">`;
+        }
+      }
+
+      // లాగిన్ అయి ఉన్నారు కాబట్టి కొత్త పోస్ట్‌కి డిలీట్ బటన్ ఆటోమేటిక్‌గా వస్తుంది
+      const displayStyle = isOwnerLoggedIn ? 'block' : 'none';
+
+      postBox.innerHTML = `
+        ${mediaContent}
+        <div class="post-footer">
+          <div class="post-text">${text}</div>
+          <button class="delete-btn" style="display: ${displayStyle};" onclick="deletePost(this)">Delete</button>
+        </div>
+      `;
+
+      postsArea.insertBefore(postBox, postsArea.firstChild);
+
+      document.getElementById('captionText').value = '';
+      fileInput.value = '';
+      alert("పోస్ట్ విజయవంతంగా యాడ్ అయింది!");
+    }
+
+    // పోస్ట్‌ను పూర్తిగా తొలగించే ఫంక్షన్
+    function deletePost(button) {
+      const confirmDelete = confirm("ఈ పోస్ట్‌ను నిజంగానే డిలీట్ చేయాలనుకుంటున్నారా?");
+      if (confirmDelete) {
+        const postCard = button.closest('.post-card');
+        postCard.remove();
+        alert("పోస్ట్ పూర్తిగా తొలగించబడింది!");
+      }
     }
   </script>
 
 </body>
 </html>
-
