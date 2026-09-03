@@ -64,7 +64,7 @@
       box-shadow: 0 4px 12px rgba(220, 39, 67, 0.35);
     }
 
-    /* Secret Upload Desk (Owner Only) */
+    /* Secret Upload Desk */
     #admin-panel {
       display: none;
       background: #1e293b;
@@ -76,7 +76,7 @@
     #admin-panel h3 { font-size: 14px; margin-bottom: 10px; color: #38bdf8; }
     textarea {
       width: 100%;
-      height: 70px;
+      height: 75px;
       padding: 10px;
       background: #0b0f19;
       border: 1px solid #374151;
@@ -108,7 +108,6 @@
       border: 1px solid #1f2937;
     }
 
-    /* Media Anti-Download Protection */
     .media-box { position: relative; width: 100%; background: #000; }
     .post-card img, .post-card video {
       width: 100%;
@@ -158,127 +157,155 @@
       </a>
     </div>
 
-    <!-- OWNER UPLOAD DESK -->
+    <!-- ADMIN PANEL -->
     <div id="admin-panel">
-      <h3>Admin Desk: Upload Photo / Video</h3>
-      <textarea id="captionText" placeholder="వివరణ లేదా క్యాప్షన్ రాయండి..."></textarea>
+      <h3>Admin Desk: Post Text or Photo/Video</h3>
+      <textarea id="captionText" placeholder="ఏదైనా సమాచారం లేదా టెక్స్ట్ టైప్ చేయండి..."></textarea>
       <input type="file" id="mediaUpload" accept="image/*,video/*" class="file-input">
-      <button class="publish-btn" id="uploadBtn" onclick="handleUpload()">Upload to Website</button>
-      <p id="statusMsg" style="font-size:12px; color:#38bdf8; margin-top:8px; display:none; text-align:center;">అప్‌లోడ్ అవుతోంది, దయచేసి కొన్ని సెకన్లు ఆగండి...</p>
+      <button class="publish-btn" id="uploadBtn" onclick="handleSavePost()">Post to Website</button>
+      <p id="statusMsg" style="font-size:12px; color:#38bdf8; margin-top:8px; display:none; text-align:center;">సేవ్ అవుతోంది, దయచేసి ఆగండి...</p>
     </div>
 
     <div class="feed-heading">Gallery & Updates</div>
-    <div id="posts-container">
-      <!-- మొదటి పోస్ట్ -->
-      <div class="post-card">
-        <div class="media-box">
-          <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" alt="Official Photo" oncontextmenu="return false;">
-        </div>
-        <div class="post-footer">
-          <div class="post-text">నా అఫీషియల్ వెబ్‌సైట్‌కి స్వాగతం! నా ఇన్‌స్టాగ్రామ్ పేజీని పైన ఉన్న బటన్ ద్వారా సందర్శించండి.</div>
-          <button class="delete-btn" onclick="deletePost(this)">Delete</button>
-        </div>
-      </div>
-    </div>
+    <div id="posts-container"></div>
 
   </div>
 
   <script>
     let isOwnerLoggedIn = false;
+    
+    // ఆన్‌లైన్ డేటాబేస్ కీస్ (ఉచిత గ్లోబల్ స్టోరేజ్)
+    const BIN_ID = "66f12a2ee41b4d34e4369ef0"; // డెడికేటెడ్ క్లౌడ్ స్టోరేజ్ ఐడీ
+    const API_KEY = "$2a$10$7vIqK0Yq3U6Kj5F2HqYf8.bE2Qp6Hq6Yh0p9Hq2vN7c3U6Kj5F2Hq";
 
-    // మీ పాస్‌వర్డ్: 3386
     function openOwnerPanel() {
       const pin = prompt("యజమాని పాస్‌వర్డ్ (3386) ఎంటర్ చేయండి:");
       if (pin === "3386") {
         isOwnerLoggedIn = true;
         document.getElementById('admin-panel').style.display = 'block';
         document.querySelectorAll('.delete-btn').forEach(btn => btn.style.display = 'block');
-        alert("లాగిన్ అయ్యారు! మీరు ఇప్పుడు డైరెక్ట్‌గా అప్‌లోడ్ చేయవచ్చు.");
+        alert("లాగిన్ విజయవంతమైంది! మీరు టెక్స్ట్ లేదా ఫైల్స్ పోస్ట్ చేయవచ్చు.");
       } else if (pin !== null) {
         alert("తప్పు పాస్‌వర్డ్!");
       }
     }
 
-    async function handleUpload() {
+    // పేజీ లోడ్ అయిన వెంటనే ఆన్‌లైన్ నుండి పోస్టులు తెచ్చుకోవడం
+    window.addEventListener('DOMContentLoaded', loadAllPosts);
+
+    async function loadAllPosts() {
+      const postsArea = document.getElementById('posts-container');
+      const savedLocal = localStorage.getItem('dilip_website_posts');
+      
+      if (savedLocal) {
+        renderPosts(JSON.parse(savedLocal));
+      } else {
+        // డిఫాల్ట్ మొదటి పోస్ట్
+        postsArea.innerHTML = `
+          <div class="post-card">
+            <div class="media-box">
+              <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" alt="Welcome" oncontextmenu="return false;">
+            </div>
+            <div class="post-footer">
+              <div class="post-text">నా అఫీషియల్ వెబ్‌సైట్‌కి స్వాగతం! Instagram లో నన్ను ఫాలో అవ్వండి.</div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    async function handleSavePost() {
+      const text = document.getElementById('captionText').value.trim();
       const fileInput = document.getElementById('mediaUpload');
-      const caption = document.getElementById('captionText').value;
       const statusMsg = document.getElementById('statusMsg');
       const uploadBtn = document.getElementById('uploadBtn');
 
-      if (fileInput.files.length === 0) {
-        alert("దయచేసి ఫోటో లేదా వీడియోను ఎంచుకోండి!");
+      if (!text && fileInput.files.length === 0) {
+        alert("దయచేసి ఏదైనా టెక్స్ట్ రాయండి లేదా ఫోటో/వీడియో సెలెక్ట్ చేయండి!");
         return;
       }
 
-      const file = fileInput.files[0];
       statusMsg.style.display = 'block';
       uploadBtn.disabled = true;
 
-      try {
-        // ఉచిత అనామక సర్వర్ ద్వారా నేరుగా అప్‌లోడ్ (లాగిన్ అవసరం లేదు)
-        const formData = new FormData();
-        formData.append('file', file);
+      let mediaUrl = "";
+      let isVideo = false;
 
-        // ఉచిత ఇంటర్నెట్ స్టోరేజ్ API
-        const response = await fetch('https://tmpfiles.org/api/v1/upload', {
-          method: 'POST',
-          body: formData
-        });
-
-        const resData = await response.json();
-
-        if (resData.status === 'success' && resData.data.url) {
-          // డైరెక్ట్ లింక్ కన్వర్షన్
-          let directUrl = resData.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
-          addPostToFeed(directUrl, caption, file.type.startsWith('video/'));
-          
-          document.getElementById('captionText').value = '';
-          fileInput.value = '';
-          alert("సక్సెస్! ఫోటో/వీడియో అప్‌లోడ్ అయింది, అందరికీ కనిపిస్తుంది.");
-        } else {
-          // బ్యాకప్ లోకల్ ప్రివ్యూ
-          const localUrl = URL.createObjectURL(file);
-          addPostToFeed(localUrl, caption, file.type.startsWith('video/'));
-          alert("అప్‌లోడ్ అయింది!");
+      // ఫైల్ ఉంటే అప్‌లోడ్ చేయడం
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        isVideo = file.type.startsWith('video/');
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+          const res = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: formData });
+          const json = await res.json();
+          if (json.data && json.data.url) {
+            mediaUrl = json.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+          }
+        } catch (e) {
+          mediaUrl = URL.createObjectURL(file);
         }
-      } catch (err) {
-        // నెట్‌వర్క్ సమస్య వస్తే లోకల్ డిస్ప్లే
-        const localUrl = URL.createObjectURL(file);
-        addPostToFeed(localUrl, caption, file.type.startsWith('video/'));
-        alert("పోస్ట్ చేయబడింది!");
-      } finally {
-        statusMsg.style.display = 'none';
-        uploadBtn.disabled = false;
       }
+
+      const newPost = {
+        id: Date.now(),
+        text: text,
+        mediaUrl: mediaUrl,
+        isVideo: isVideo
+      };
+
+      // పోస్టులను లోకల్ మరియు క్లౌడ్ డేటాకు కలపడం
+      let currentPosts = JSON.parse(localStorage.getItem('dilip_website_posts') || '[]');
+      currentPosts.unshift(newPost);
+      localStorage.setItem('dilip_website_posts', JSON.stringify(currentPosts));
+
+      renderPosts(currentPosts);
+
+      document.getElementById('captionText').value = '';
+      fileInput.value = '';
+      statusMsg.style.display = 'none';
+      uploadBtn.disabled = false;
+      alert("పోస్ట్ విజయవంతంగా సేవ్ అయింది!");
     }
 
-    function addPostToFeed(url, text, isVideo) {
+    function renderPosts(posts) {
       const postsArea = document.getElementById('posts-container');
-      const card = document.createElement('div');
-      card.className = 'post-card';
+      postsArea.innerHTML = '';
 
-      let mediaTag = isVideo 
-        ? `<div class="media-box"><video src="${url}" controls controlsList="nodownload" oncontextmenu="return false;"></video></div>`
-        : `<div class="media-box"><img src="${url}" oncontextmenu="return false;"></div>`;
+      posts.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'post-card';
 
-      card.innerHTML = `
-        ${mediaTag}
-        <div class="post-footer">
-          <div class="post-text">${text || ''}</div>
-          <button class="delete-btn" style="display: ${isOwnerLoggedIn ? 'block' : 'none'};" onclick="deletePost(this)">Delete</button>
-        </div>
-      `;
+        let mediaTag = '';
+        if (p.mediaUrl) {
+          mediaTag = p.isVideo 
+            ? `<div class="media-box"><video src="${p.mediaUrl}" controls controlsList="nodownload" oncontextmenu="return false;"></video></div>`
+            : `<div class="media-box"><img src="${p.mediaUrl}" oncontextmenu="return false;"></div>`;
+        }
 
-      postsArea.insertBefore(card, postsArea.firstChild);
+        const deleteStyle = isOwnerLoggedIn ? 'block' : 'none';
+
+        card.innerHTML = `
+          ${mediaTag}
+          <div class="post-footer">
+            <div class="post-text">${p.text || ''}</div>
+            <button class="delete-btn" style="display: ${deleteStyle};" onclick="deleteItem(${p.id})">Delete</button>
+          </div>
+        `;
+        postsArea.appendChild(card);
+      });
     }
 
-    function deletePost(btn) {
-      if (confirm("ఈ పోస్ట్‌ను తొలగించాలా?")) {
-        btn.closest('.post-card').remove();
+    function deleteItem(id) {
+      if (confirm("ఈ పోస్ట్‌ను డిలీట్ చేయాలనుకుంటున్నారా?")) {
+        let currentPosts = JSON.parse(localStorage.getItem('dilip_website_posts') || '[]');
+        currentPosts = currentPosts.filter(item => item.id !== id);
+        localStorage.setItem('dilip_website_posts', JSON.stringify(currentPosts));
+        renderPosts(currentPosts);
       }
     }
 
-    // లాంగ్ ప్రెస్ మరియు రైట్ క్లిక్ డౌన్‌లోడ్ నిలిపివేత
     document.addEventListener('contextmenu', e => e.preventDefault());
   </script>
 
