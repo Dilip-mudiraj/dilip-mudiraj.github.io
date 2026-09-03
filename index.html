@@ -3,113 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dilip Mudiraj | Official Portfolio</title>
-
-  <!-- బ్రౌజర్‌లో వేగంగా వెతకడానికి & సజెషన్స్ రావడానికి SEO Tags -->
-  <meta name="description" content="Dilip Mudiraj Official Website - Portfolio, Photos, and Updates.">
-  <meta name="keywords" content="dilip, dilip mudiraj, dilipmudiraj, dilip_mudiraj_ns_lover">
-  <meta name="author" content="Dilip Mudiraj">
-  <link rel="canonical" href="https://dilip-mudiraj.github.io/">
-
-  <!-- వెబ్‌సైట్ రెప్పపాటులో లోడ్ అవ్వడానికి Speed Optimization -->
-  <meta http-equiv="Cache-Control" content="max-age=31536000, must-revalidate">
-  <link rel="preconnect" href="https://images.unsplash.com">
-
+  <title>Dilip Mudiraj | Official Site</title>
+  
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { 
       background: #0b0f19; 
       color: #f8fafc; 
-      padding-bottom: 80px; 
+      padding-bottom: 60px; 
       user-select: none; 
       -webkit-user-select: none; 
     }
 
     header {
       background: #111827;
-      padding: 14px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 16px;
+      text-align: center;
       border-bottom: 1px solid #1f2937;
       position: sticky;
       top: 0;
       z-index: 100;
     }
-    .brand { font-size: 17px; font-weight: bold; color: #38bdf8; letter-spacing: 0.5px; }
-    .owner-btn {
-      background: #1f2937;
-      color: #94a3b8;
-      border: 1px solid #374151;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-    }
+    .brand { font-size: 18px; font-weight: bold; color: #38bdf8; letter-spacing: 1px; }
 
     .container { max-width: 480px; margin: 20px auto; padding: 0 15px; }
 
+    /* ప్రొఫైల్ కార్డు */
     .profile-card {
       background: #111827;
       border-radius: 14px;
-      padding: 22px 18px;
+      padding: 20px;
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       border: 1px solid #1f2937;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    .profile-card h2 { font-size: 22px; margin-bottom: 6px; color: #fff; }
-    .profile-card p { color: #9ca3af; font-size: 13px; margin-bottom: 18px; }
+    .profile-card h2 { font-size: 22px; margin-bottom: 6px; }
+    .profile-card p { color: #9ca3af; font-size: 13px; margin-bottom: 16px; }
     .insta-button {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
       color: white;
       text-decoration: none;
       font-weight: bold;
       padding: 12px 18px;
       border-radius: 10px;
       font-size: 14px;
-      box-shadow: 0 4px 12px rgba(220, 39, 67, 0.35);
     }
 
-    /* Secret Upload Desk */
-    #admin-panel {
-      display: none;
-      background: #1e293b;
-      padding: 16px;
+    /* లిస్ట్ సెక్షన్ (List Box) */
+    .list-card {
+      background: #111827;
       border-radius: 12px;
-      margin-bottom: 25px;
-      border: 2px solid #38bdf8;
+      padding: 18px;
+      margin-bottom: 20px;
+      border: 1px solid #1f2937;
     }
-    #admin-panel h3 { font-size: 14px; margin-bottom: 10px; color: #38bdf8; }
-    textarea {
-      width: 100%;
-      height: 75px;
-      padding: 10px;
-      background: #0b0f19;
-      border: 1px solid #374151;
-      border-radius: 8px;
-      color: white;
-      margin-bottom: 10px;
-      outline: none;
-      font-size: 13px;
-    }
-    .file-input { margin-bottom: 12px; font-size: 12px; color: #9ca3af; width: 100%; }
-    .publish-btn {
-      width: 100%;
-      padding: 11px;
-      background: #38bdf8;
-      border: none;
-      border-radius: 8px;
-      color: #0b0f19;
+    .list-title {
+      font-size: 16px;
       font-weight: bold;
-      cursor: pointer;
+      color: #38bdf8;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #374151;
+      padding-bottom: 8px;
+    }
+    .custom-list {
+      list-style-position: inside;
+      line-height: 1.8;
       font-size: 14px;
+      color: #e5e7eb;
+    }
+    .custom-list li {
+      padding: 6px 0;
+      border-bottom: 1px solid #1f2937;
     }
 
+    /* ఫోటో కార్డు & డౌన్‌లోడ్ ప్రొటెక్షన్ */
     .feed-heading { font-size: 15px; color: #94a3b8; margin-bottom: 12px; font-weight: 600; }
     .post-card {
       background: #111827;
@@ -118,199 +89,59 @@
       margin-bottom: 18px;
       border: 1px solid #1f2937;
     }
-
-    .media-box { position: relative; width: 100%; background: #000; }
-    .post-card img, .post-card video {
+    .post-card img {
       width: 100%;
       display: block;
-      max-height: 480px;
+      max-height: 500px;
       object-fit: cover;
       pointer-events: auto;
       -webkit-touch-callout: none;
     }
-
-    .post-footer {
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .post-text { font-size: 14px; line-height: 1.5; color: #e5e7eb; flex: 1; }
-
-    .delete-btn {
-      display: none;
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+    .post-footer { padding: 14px 16px; font-size: 14px; line-height: 1.5; color: #e5e7eb; }
   </style>
 </head>
 <body oncontextmenu="return false;">
 
   <header>
     <div class="brand">DILIP MUDIRAJ</div>
-    <button class="owner-btn" onclick="openOwnerPanel()">Admin Login</button>
   </header>
 
   <div class="container">
 
+    <!-- Instagram Profile Card -->
     <div class="profile-card">
       <h2>Dilip Mudiraj</h2>
-      <p>Welcome to my official portfolio. Check out my Instagram below:</p>
+      <p>Official Portfolio & Updates</p>
       <a href="https://www.instagram.com/dilip_mudiraj_ns_lover" target="_blank" class="insta-button">
         📸 Visit My Instagram Profile
       </a>
     </div>
 
-    <!-- ADMIN PANEL -->
-    <div id="admin-panel">
-      <h3>Admin Desk: Post Text or Photo/Video</h3>
-      <textarea id="captionText" placeholder="ఏదైనా సమాచారం లేదా టెక్స్ట్ టైప్ చేయండి..."></textarea>
-      <input type="file" id="mediaUpload" accept="image/*,video/*" class="file-input">
-      <button class="publish-btn" id="uploadBtn" onclick="handleSavePost()">Post to Website</button>
-      <p id="statusMsg" style="font-size:12px; color:#38bdf8; margin-top:8px; display:none; text-align:center;">సేవ్ అవుతోంది, దయచేసి ఆగండి...</p>
+    <!-- బహుభాషా లిస్ట్ బాక్స్ (Multi-language List) -->
+    <div class="list-card">
+      <div class="list-title">ముఖ్యమైన వివరాలు / Updates</div>
+      <ol class="custom-list">
+        <li>Official portfolio of Dilip Mudiraj.</li>
+        <li>నా అధికారిక వెబ్‌సైట్‌కి స్వాగతం.</li>
+        <li>Follow on Instagram for latest photos & videos.</li>
+        <li>మీరు ఇక్కడ ఏ భాషలోనైనా కొత్త లైన్లు చేర్చుకోవచ్చు.</li>
+      </ol>
     </div>
 
-    <div class="feed-heading">Gallery & Updates</div>
-    <div id="posts-container"></div>
+    <!-- ఫోటో సెక్షన్ -->
+    <div class="feed-heading">Latest Posts</div>
+    <div class="post-card">
+      <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" alt="Post" oncontextmenu="return false;">
+      <div class="post-footer">
+        నా అఫీషియల్ వెబ్‌సైట్ మరియు ఇన్‌స్టాగ్రామ్ పేజీని ఫాలో అవ్వండి.
+      </div>
+    </div>
 
   </div>
 
   <script>
-    let isOwnerLoggedIn = false;
-
-    function openOwnerPanel() {
-      const pin = prompt("యజమాని పాస్‌వర్డ్ (3386) ఎంటర్ చేయండి:");
-      if (pin === "3386") {
-        isOwnerLoggedIn = true;
-        document.getElementById('admin-panel').style.display = 'block';
-        document.querySelectorAll('.delete-btn').forEach(btn => btn.style.display = 'block');
-        alert("లాగిన్ విజయవంతమైంది!");
-      } else if (pin !== null) {
-        alert("తప్పు పాస్‌వర్డ్!");
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', loadAllPosts);
-
-    function loadAllPosts() {
-      const postsArea = document.getElementById('posts-container');
-      const savedLocal = localStorage.getItem('dilip_website_posts');
-      
-      if (savedLocal) {
-        renderPosts(JSON.parse(savedLocal));
-      } else {
-        postsArea.innerHTML = `
-          <div class="post-card">
-            <div class="media-box">
-              <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" alt="Welcome" oncontextmenu="return false;">
-            </div>
-            <div class="post-footer">
-              <div class="post-text">నా అఫీషియల్ వెబ్‌సైట్‌కి స్వాగతం! Instagram లో నన్ను ఫాలో అవ్వండి.</div>
-            </div>
-          </div>
-        `;
-      }
-    }
-
-    async function handleSavePost() {
-      const text = document.getElementById('captionText').value.trim();
-      const fileInput = document.getElementById('mediaUpload');
-      const statusMsg = document.getElementById('statusMsg');
-      const uploadBtn = document.getElementById('uploadBtn');
-
-      if (!text && fileInput.files.length === 0) {
-        alert("దయచేసి ఏదైనా టెక్స్ట్ రాయండి లేదా ఫోటో/వీడియో సెలెక్ట్ చేయండి!");
-        return;
-      }
-
-      statusMsg.style.display = 'block';
-      uploadBtn.disabled = true;
-
-      let mediaUrl = "";
-      let isVideo = false;
-
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        isVideo = file.type.startsWith('video/');
-        try {
-          const formData = new FormData();
-          formData.append('file', file);
-          const res = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: formData });
-          const json = await res.json();
-          if (json.data && json.data.url) {
-            mediaUrl = json.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
-          }
-        } catch (e) {
-          mediaUrl = URL.createObjectURL(file);
-        }
-      }
-
-      const newPost = {
-        id: Date.now(),
-        text: text,
-        mediaUrl: mediaUrl,
-        isVideo: isVideo
-      };
-
-      let currentPosts = JSON.parse(localStorage.getItem('dilip_website_posts') || '[]');
-      currentPosts.unshift(newPost);
-      localStorage.setItem('dilip_website_posts', JSON.stringify(currentPosts));
-
-      renderPosts(currentPosts);
-
-      document.getElementById('captionText').value = '';
-      fileInput.value = '';
-      statusMsg.style.display = 'none';
-      uploadBtn.disabled = false;
-      alert("పోస్ట్ విజయవంతంగా సేవ్ అయింది!");
-    }
-
-    function renderPosts(posts) {
-      const postsArea = document.getElementById('posts-container');
-      postsArea.innerHTML = '';
-
-      posts.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'post-card';
-
-        let mediaTag = '';
-        if (p.mediaUrl) {
-          mediaTag = p.isVideo 
-            ? `<div class="media-box"><video src="${p.mediaUrl}" controls controlsList="nodownload" oncontextmenu="return false;"></video></div>`
-            : `<div class="media-box"><img src="${p.mediaUrl}" oncontextmenu="return false;"></div>`;
-        }
-
-        const deleteStyle = isOwnerLoggedIn ? 'block' : 'none';
-
-        card.innerHTML = `
-          ${mediaTag}
-          <div class="post-footer">
-            <div class="post-text">${p.text || ''}</div>
-            <button class="delete-btn" style="display: ${deleteStyle};" onclick="deleteItem(${p.id})">Delete</button>
-          </div>
-        `;
-        postsArea.appendChild(card);
-      });
-    }
-
-    function deleteItem(id) {
-      if (confirm("ఈ పోస్ట్‌ను డిలీట్ చేయాలనుకుంటున్నారా?")) {
-        let currentPosts = JSON.parse(localStorage.getItem('dilip_website_posts') || '[]');
-        currentPosts = currentPosts.filter(item => item.id !== id);
-        localStorage.setItem('dilip_website_posts', JSON.stringify(currentPosts));
-        renderPosts(currentPosts);
-      }
-    }
-
+    // లాంగ్ ప్రెస్ / సేవ్ / డౌన్‌లోడ్ లాకింగ్
     document.addEventListener('contextmenu', e => e.preventDefault());
   </script>
-
 </body>
 </html>
