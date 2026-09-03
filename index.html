@@ -10,7 +10,7 @@
     body { 
       background: #0b0f19; 
       color: #f8fafc; 
-      padding-bottom: 60px; 
+      padding-bottom: 90px; 
       user-select: none; 
       -webkit-user-select: none; 
     }
@@ -53,7 +53,43 @@
       font-size: 14px;
     }
 
-    /* లిస్ట్ సెక్షన్ (List Box) */
+    /* ఓనర్ అడ్మిన్ డెస్క్ (Owner Desk) */
+    #admin-panel {
+      display: none;
+      background: #1e293b;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 22px;
+      border: 2px solid #38bdf8;
+      box-shadow: 0 4px 20px rgba(56, 189, 248, 0.2);
+    }
+    #admin-panel h3 { font-size: 15px; margin-bottom: 10px; color: #38bdf8; }
+    textarea {
+      width: 100%;
+      height: 75px;
+      padding: 10px;
+      background: #0b0f19;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      color: white;
+      margin-bottom: 10px;
+      outline: none;
+      font-size: 13px;
+    }
+    .action-btn {
+      width: 100%;
+      padding: 11px;
+      background: #38bdf8;
+      border: none;
+      border-radius: 8px;
+      color: #0b0f19;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    /* బహుభాషా లిస్ట్ బాక్స్ */
     .list-card {
       background: #111827;
       border-radius: 12px;
@@ -80,7 +116,7 @@
       border-bottom: 1px solid #1f2937;
     }
 
-    /* ఫోటో కార్డు & డౌన్‌లోడ్ ప్రొటెక్షన్ */
+    /* పోస్టుల గ్యాలరీ & లాకింగ్ */
     .feed-heading { font-size: 15px; color: #94a3b8; margin-bottom: 12px; font-weight: 600; }
     .post-card {
       background: #111827;
@@ -97,7 +133,46 @@
       pointer-events: auto;
       -webkit-touch-callout: none;
     }
-    .post-footer { padding: 14px 16px; font-size: 14px; line-height: 1.5; color: #e5e7eb; }
+    .post-footer { 
+      padding: 14px 16px; 
+      font-size: 14px; 
+      line-height: 1.5; 
+      color: #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ఫ్లయింగ్ / ఫ్లోటింగ్ ఓనర్ బటన్ (Floating Admin Button) */
+    .floating-admin-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #38bdf8;
+      color: #0b0f19;
+      padding: 12px 18px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 14px;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      cursor: pointer;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .delete-btn {
+      display: none;
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body oncontextmenu="return false;">
@@ -108,7 +183,7 @@
 
   <div class="container">
 
-    <!-- Instagram Profile Card -->
+    <!-- ప్రొఫైల్ కార్డు -->
     <div class="profile-card">
       <h2>Dilip Mudiraj</h2>
       <p>Official Portfolio & Updates</p>
@@ -117,31 +192,78 @@
       </a>
     </div>
 
-    <!-- బహుభాషా లిస్ట్ బాక్స్ (Multi-language List) -->
+    <!-- ఓనర్ అడ్మిన్ డెస్క్ -->
+    <div id="admin-panel">
+      <h3>👑 Owner Desk (అడ్మిన్ ప్యానెల్)</h3>
+      <textarea id="newListItem" placeholder="లిస్ట్‌లో చేర్చడానికి కొత్త పాయింట్ లేదా అప్‌డేట్ రాయండి..."></textarea>
+      <button class="action-btn" onclick="addNewListItem()">Add to List</button>
+      <p style="font-size:11px; color:#94a3b8;">మీరు రాసిన పాయింట్లు వెంటనే కింద లిస్ట్‌లోకి చేరుతాయి.</p>
+    </div>
+
+    <!-- బహుభాషా లిస్ట్ బాక్స్ -->
     <div class="list-card">
       <div class="list-title">ముఖ్యమైన వివరాలు / Updates</div>
-      <ol class="custom-list">
+      <ol class="custom-list" id="mainList">
         <li>Official portfolio of Dilip Mudiraj.</li>
         <li>నా అధికారిక వెబ్‌సైట్‌కి స్వాగతం.</li>
         <li>Follow on Instagram for latest photos & videos.</li>
-        <li>మీరు ఇక్కడ ఏ భాషలోనైనా కొత్త లైన్లు చేర్చుకోవచ్చు.</li>
       </ol>
     </div>
 
     <!-- ఫోటో సెక్షన్ -->
     <div class="feed-heading">Latest Posts</div>
-    <div class="post-card">
-      <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" alt="Post" oncontextmenu="return false;">
-      <div class="post-footer">
-        నా అఫీషియల్ వెబ్‌సైట్ మరియు ఇన్‌స్టాగ్రామ్ పేజీని ఫాలో అవ్వండి.
+    <div id="postsArea">
+      <div class="post-card">
+        <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" alt="Post" oncontextmenu="return false;">
+        <div class="post-footer">
+          <div>నా అఫీషియల్ వెబ్‌సైట్ మరియు ఇన్‌స్టాగ్రామ్ పేజీని ఫాలో అవ్వండి.</div>
+        </div>
       </div>
     </div>
 
   </div>
 
+  <!-- ఫ్లయింగ్ ఓనర్ బటన్ -->
+  <button class="floating-admin-btn" onclick="verifyOwner()">
+    🔒 Owner
+  </button>
+
   <script>
-    // లాంగ్ ప్రెస్ / సేవ్ / డౌన్‌లోడ్ లాకింగ్
+    let isOwnerLoggedIn = false;
+
+    // ఓనర్ వెరిఫికేషన్ (పాస్‌వర్డ్: 3386)
+    function verifyOwner() {
+      const pin = prompt("ఓనర్ పాస్‌వర్డ్ (3386) నమోదు చేయండి:");
+      if (pin === "3386") {
+        isOwnerLoggedIn = true;
+        document.getElementById('admin-panel').style.display = 'block';
+        alert("ఓనర్ లాగిన్ సక్సెస్! మీరు ఇప్పుడు కొత్త లిస్ట్ వివరాలు చేర్చవచ్చు.");
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (pin !== null) {
+        alert("తప్పు పాస్‌వర్డ్!");
+      }
+    }
+
+    // లిస్ట్‌లోకి కొత్త పాయింట్ చేర్చడం
+    function addNewListItem() {
+      const text = document.getElementById('newListItem').value.trim();
+      if (!text) {
+        alert("దయచేసి ఏదైనా రాయండి!");
+        return;
+      }
+
+      const list = document.getElementById('mainList');
+      const li = document.createElement('li');
+      li.textContent = text;
+      list.appendChild(li);
+
+      document.getElementById('newListItem').value = '';
+      alert("లిస్ట్‌లోకి విజయవంతంగా చేరింది!");
+    }
+
+    // డౌన్‌లోడ్ / లాంగ్ ప్రెస్ లాకింగ్
     document.addEventListener('contextmenu', e => e.preventDefault());
   </script>
+
 </body>
 </html>
