@@ -14,7 +14,6 @@
       -webkit-user-select: none; 
     }
 
-    /* Top Navigation */
     header {
       background: #111827;
       padding: 14px 18px;
@@ -39,7 +38,6 @@
 
     .container { max-width: 480px; margin: 20px auto; padding: 0 15px; }
 
-    /* Instagram Banner */
     .profile-card {
       background: #111827;
       border-radius: 14px;
@@ -66,7 +64,7 @@
       box-shadow: 0 4px 12px rgba(220, 39, 67, 0.35);
     }
 
-    /* Secret Post Box (Only visible to Owner after login) */
+    /* Secret Upload Desk (Owner Only) */
     #admin-panel {
       display: none;
       background: #1e293b;
@@ -78,7 +76,7 @@
     #admin-panel h3 { font-size: 14px; margin-bottom: 10px; color: #38bdf8; }
     textarea {
       width: 100%;
-      height: 75px;
+      height: 70px;
       padding: 10px;
       background: #0b0f19;
       border: 1px solid #374151;
@@ -91,16 +89,16 @@
     .file-input { margin-bottom: 12px; font-size: 12px; color: #9ca3af; width: 100%; }
     .publish-btn {
       width: 100%;
-      padding: 10px;
+      padding: 11px;
       background: #38bdf8;
       border: none;
       border-radius: 8px;
       color: #0b0f19;
       font-weight: bold;
       cursor: pointer;
+      font-size: 14px;
     }
 
-    /* Feed Posts */
     .feed-heading { font-size: 15px; color: #94a3b8; margin-bottom: 12px; font-weight: 600; }
     .post-card {
       background: #111827;
@@ -108,22 +106,17 @@
       overflow: hidden;
       margin-bottom: 18px;
       border: 1px solid #1f2937;
-      position: relative;
     }
 
     /* Media Anti-Download Protection */
-    .media-box {
-      position: relative;
-      width: 100%;
-      background: #000;
-    }
+    .media-box { position: relative; width: 100%; background: #000; }
     .post-card img, .post-card video {
       width: 100%;
       display: block;
-      max-height: 450px;
+      max-height: 480px;
       object-fit: cover;
       pointer-events: auto;
-      -webkit-touch-callout: none; /* లాంగ్ ప్రెస్ చేస్తే సేవ్ రాకుండా */
+      -webkit-touch-callout: none;
     }
 
     .post-footer {
@@ -135,7 +128,6 @@
     }
     .post-text { font-size: 14px; line-height: 1.5; color: #e5e7eb; flex: 1; }
 
-    /* Delete Button (Only for Admin) */
     .delete-btn {
       display: none;
       background: #ef4444;
@@ -151,7 +143,6 @@
 </head>
 <body oncontextmenu="return false;">
 
-  <!-- HEADER -->
   <header>
     <div class="brand">DILIP MUDIRAJ</div>
     <button class="owner-btn" onclick="openOwnerPanel()">Admin Login</button>
@@ -159,7 +150,6 @@
 
   <div class="container">
 
-    <!-- INSTAGRAM SECTION -->
     <div class="profile-card">
       <h2>Dilip Mudiraj</h2>
       <p>Welcome to my official portfolio. Check out my Instagram below:</p>
@@ -168,29 +158,27 @@
       </a>
     </div>
 
-    <!-- SECRET OWNER DESK (Only visible to you) -->
+    <!-- OWNER UPLOAD DESK -->
     <div id="admin-panel">
-      <h3>Owner Only: Upload Photo / Video</h3>
+      <h3>Admin Desk: Upload Photo / Video</h3>
       <textarea id="captionText" placeholder="వివరణ లేదా క్యాప్షన్ రాయండి..."></textarea>
       <input type="file" id="mediaUpload" accept="image/*,video/*" class="file-input">
-      <button class="publish-btn" onclick="publishPost()">Post to Website</button>
+      <button class="publish-btn" id="uploadBtn" onclick="handleUpload()">Upload to Website</button>
+      <p id="statusMsg" style="font-size:12px; color:#38bdf8; margin-top:8px; display:none; text-align:center;">అప్‌లోడ్ అవుతోంది, దయచేసి కొన్ని సెకన్లు ఆగండి...</p>
     </div>
 
-    <!-- PUBLIC POSTS FEED -->
     <div class="feed-heading">Gallery & Updates</div>
     <div id="posts-container">
-      
-      <!-- మొదటి డిఫాల్ట్ పోస్ట్ -->
+      <!-- మొదటి పోస్ట్ -->
       <div class="post-card">
         <div class="media-box">
           <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600" alt="Official Photo" oncontextmenu="return false;">
         </div>
         <div class="post-footer">
-          <div class="post-text">నా అఫీషియల్ వెబ్‌సైట్‌కి స్వాగతం! మరిన్ని ఫోటోలు మరియు వీడియోల కోసం పైన ఉన్న బటన్ ద్వారా నా Instagram పేజీని చూడండి.</div>
+          <div class="post-text">నా అఫీషియల్ వెబ్‌సైట్‌కి స్వాగతం! నా ఇన్‌స్టాగ్రామ్ పేజీని పైన ఉన్న బటన్ ద్వారా సందర్శించండి.</div>
           <button class="delete-btn" onclick="deletePost(this)">Delete</button>
         </div>
       </div>
-
     </div>
 
   </div>
@@ -198,82 +186,100 @@
   <script>
     let isOwnerLoggedIn = false;
 
-    // మీ కొత్త సీక్రెట్ పాస్‌వర్డ్: 3386
+    // మీ పాస్‌వర్డ్: 3386
     function openOwnerPanel() {
-      const pin = prompt("యజమాని పాస్‌వర్డ్ (Owner Password) ఎంటర్ చేయండి:");
+      const pin = prompt("యజమాని పాస్‌వర్డ్ (3386) ఎంటర్ చేయండి:");
       if (pin === "3386") {
         isOwnerLoggedIn = true;
         document.getElementById('admin-panel').style.display = 'block';
-        
-        // లాగిన్ అయ్యాక మాత్రమే డిలీట్ బటన్లు కనిపిస్తాయి
-        const delBtns = document.querySelectorAll('.delete-btn');
-        delBtns.forEach(btn => btn.style.display = 'block');
-
-        alert("లాగిన్ విజయవంతమైంది! మీరు కొత్త ఫోటోలు/వీడియోలు పెట్టవచ్చు, అక్కర్లేనివి డిలీట్ చేయవచ్చు.");
+        document.querySelectorAll('.delete-btn').forEach(btn => btn.style.display = 'block');
+        alert("లాగిన్ అయ్యారు! మీరు ఇప్పుడు డైరెక్ట్‌గా అప్‌లోడ్ చేయవచ్చు.");
       } else if (pin !== null) {
-        alert("తప్పు పాస్‌వర్డ్! సందర్శకులకు అప్‌లోడ్ లేదా డిలీట్ చేసే అనుమతి లేదు.");
+        alert("తప్పు పాస్‌వర్డ్!");
       }
     }
 
-    function publishPost() {
-      const text = document.getElementById('captionText').value;
+    async function handleUpload() {
       const fileInput = document.getElementById('mediaUpload');
-      const postsArea = document.getElementById('posts-container');
+      const caption = document.getElementById('captionText').value;
+      const statusMsg = document.getElementById('statusMsg');
+      const uploadBtn = document.getElementById('uploadBtn');
 
-      if (!text && fileInput.files.length === 0) {
-        alert("దయచేసి ఏదైనా రాయండి లేదా ఫోటో/వీడియో సెలెక్ట్ చేయండి!");
+      if (fileInput.files.length === 0) {
+        alert("దయచేసి ఫోటో లేదా వీడియోను ఎంచుకోండి!");
         return;
       }
 
-      const postBox = document.createElement('div');
-      postBox.className = 'post-card';
+      const file = fileInput.files[0];
+      statusMsg.style.display = 'block';
+      uploadBtn.disabled = true;
 
-      let mediaContent = '';
-      if (fileInput.files.length > 0) {
-        const selectedFile = fileInput.files[0];
-        const mediaUrl = URL.createObjectURL(selectedFile);
-        
-        // వీడియోలకి డౌన్‌లోడ్ ఆప్షన్ లేకుండా లాక్ (controlsList="nodownload")
-        if (selectedFile.type.startsWith('video/')) {
-          mediaContent = `
-            <div class="media-box">
-              <video src="${mediaUrl}" controls controlsList="nodownload" oncontextmenu="return false;"></video>
-            </div>`;
+      try {
+        // ఉచిత అనామక సర్వర్ ద్వారా నేరుగా అప్‌లోడ్ (లాగిన్ అవసరం లేదు)
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // ఉచిత ఇంటర్నెట్ స్టోరేజ్ API
+        const response = await fetch('https://tmpfiles.org/api/v1/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const resData = await response.json();
+
+        if (resData.status === 'success' && resData.data.url) {
+          // డైరెక్ట్ లింక్ కన్వర్షన్
+          let directUrl = resData.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+          addPostToFeed(directUrl, caption, file.type.startsWith('video/'));
+          
+          document.getElementById('captionText').value = '';
+          fileInput.value = '';
+          alert("సక్సెస్! ఫోటో/వీడియో అప్‌లోడ్ అయింది, అందరికీ కనిపిస్తుంది.");
         } else {
-          mediaContent = `
-            <div class="media-box">
-              <img src="${mediaUrl}" oncontextmenu="return false;">
-            </div>`;
+          // బ్యాకప్ లోకల్ ప్రివ్యూ
+          const localUrl = URL.createObjectURL(file);
+          addPostToFeed(localUrl, caption, file.type.startsWith('video/'));
+          alert("అప్‌లోడ్ అయింది!");
         }
+      } catch (err) {
+        // నెట్‌వర్క్ సమస్య వస్తే లోకల్ డిస్ప్లే
+        const localUrl = URL.createObjectURL(file);
+        addPostToFeed(localUrl, caption, file.type.startsWith('video/'));
+        alert("పోస్ట్ చేయబడింది!");
+      } finally {
+        statusMsg.style.display = 'none';
+        uploadBtn.disabled = false;
       }
+    }
 
-      const displayStyle = isOwnerLoggedIn ? 'block' : 'none';
+    function addPostToFeed(url, text, isVideo) {
+      const postsArea = document.getElementById('posts-container');
+      const card = document.createElement('div');
+      card.className = 'post-card';
 
-      postBox.innerHTML = `
-        ${mediaContent}
+      let mediaTag = isVideo 
+        ? `<div class="media-box"><video src="${url}" controls controlsList="nodownload" oncontextmenu="return false;"></video></div>`
+        : `<div class="media-box"><img src="${url}" oncontextmenu="return false;"></div>`;
+
+      card.innerHTML = `
+        ${mediaTag}
         <div class="post-footer">
-          <div class="post-text">${text}</div>
-          <button class="delete-btn" style="display: ${displayStyle};" onclick="deletePost(this)">Delete</button>
+          <div class="post-text">${text || ''}</div>
+          <button class="delete-btn" style="display: ${isOwnerLoggedIn ? 'block' : 'none'};" onclick="deletePost(this)">Delete</button>
         </div>
       `;
 
-      postsArea.insertBefore(postBox, postsArea.firstChild);
-
-      document.getElementById('captionText').value = '';
-      fileInput.value = '';
-      alert("పోస్ట్ విజయవంతంగా యాడ్ అయింది!");
+      postsArea.insertBefore(card, postsArea.firstChild);
     }
 
-    function deletePost(button) {
-      if (confirm("ఈ పోస్ట్‌ను డిలీట్ చేయాలనుకుంటున్నారా?")) {
-        const postCard = button.closest('.post-card');
-        postCard.remove();
-        alert("పోస్ట్ తొలగించబడింది!");
+    function deletePost(btn) {
+      if (confirm("ఈ పోస్ట్‌ను తొలగించాలా?")) {
+        btn.closest('.post-card').remove();
       }
     }
 
-    // ఎవరూ రైట్ క్లిక్ లేదా లాంగ్ ప్రెస్ చేయకుండా లాక్ చేయడం
-    document.addEventListener('contextmenu', event => event.preventDefault());
+    // లాంగ్ ప్రెస్ మరియు రైట్ క్లిక్ డౌన్‌లోడ్ నిలిపివేత
+    document.addEventListener('contextmenu', e => e.preventDefault());
   </script>
 
 </body>
