@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="te">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,73 +8,83 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { 
       background: #0b0f19; 
       color: #f8fafc; 
-      padding-bottom: 60px; 
+      padding-bottom: 50px; 
       user-select: none; 
       -webkit-user-select: none; 
       overflow-x: hidden;
+      text-align: center;
     }
 
     header {
       background: #111827;
-      padding: 14px;
-      text-align: center;
-      border-bottom: 1px solid #1f2937;
-      font-size: 17px;
+      padding: 12px;
+      font-size: 18px;
       font-weight: bold;
       color: #38bdf8;
+      border-bottom: 1px solid #1f2937;
       letter-spacing: 1px;
     }
-    .container { max-width: 440px; margin: 15px auto; padding: 0 10px; }
+    .container { max-width: 440px; margin: 10px auto; padding: 0 10px; }
 
-    .lobby-card {
+    /* లాబీ కార్డ్ */
+    .lobby-box {
       background: #111827;
       border-radius: 12px;
-      padding: 14px;
+      padding: 16px;
       border: 2px solid #ef4444;
-      text-align: center;
       margin-bottom: 15px;
     }
+    .lobby-box h2 { font-size: 18px; color: #ef4444; margin-bottom: 10px; }
     input {
-      width: 75%;
-      padding: 10px;
+      width: 80%;
+      padding: 12px;
       border-radius: 8px;
       border: 2px solid #ef4444;
       background: #0b0f19;
-      color: #ef4444;
-      font-size: 18px;
+      color: #38bdf8;
+      font-size: 20px;
       font-weight: bold;
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       outline: none;
     }
-    .btn-group { display: flex; gap: 8px; justify-content: center; }
+    .btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
     .btn {
-      padding: 9px 15px;
+      padding: 10px 14px;
       border-radius: 8px;
       border: none;
       font-weight: bold;
       cursor: pointer;
       font-size: 13px;
     }
-    .btn-host { background: #ef4444; color: white; }
-    .btn-join { background: #3b82f6; color: white; }
+    .btn-red { background: #dc2626; color: white; }
+    .btn-blue { background: #2563eb; color: white; }
+    .btn-offline { background: #10b981; color: white; margin-top: 5px; }
 
-    /* --- 3D DICE STYLES --- */
+    /* స్టేటస్ */
+    #status-msg {
+      font-size: 13px;
+      color: #38bdf8;
+      margin: 8px 0;
+      font-weight: bold;
+    }
+
+    /* 3D DICE */
     .dice-area {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin: 10px 0 15px;
+      margin: 10px 0;
       perspective: 600px;
     }
     .dice-scene {
-      width: 60px;
-      height: 60px;
+      width: 55px;
+      height: 55px;
       cursor: pointer;
     }
     .cube {
@@ -82,19 +92,19 @@
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      transform: translateZ(-30px);
-      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.3, 1.2);
+      transform: translateZ(-27px);
+      transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1.2);
     }
     .cube-face {
       position: absolute;
-      width: 60px;
-      height: 60px;
+      width: 55px;
+      height: 55px;
       background: #ffffff;
       border: 2px solid #cbd5e1;
-      border-radius: 10px;
+      border-radius: 8px;
       display: grid;
-      padding: 6px;
-      box-shadow: inset 0 0 8px rgba(0,0,0,0.15);
+      padding: 5px;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
     }
     .dot {
       width: 10px;
@@ -105,35 +115,32 @@
       justify-self: center;
     }
     .dot.red-dot { background: #dc2626; width: 14px; height: 14px; }
-
-    /* డైస్ ఫేస్ స్థానాలు */
-    .face-1 { transform: rotateY(0deg) translateZ(30px); display: flex; align-items: center; justify-content: center; }
-    .face-6 { transform: rotateY(180deg) translateZ(30px); grid-template-columns: 1fr 1fr; }
-    .face-2 { transform: rotateY(90deg) translateZ(30px); grid-template-columns: 1fr 1fr; }
+    .face-1 { transform: rotateY(0deg) translateZ(27px); display: flex; align-items: center; justify-content: center; }
+    .face-6 { transform: rotateY(180deg) translateZ(27px); grid-template-columns: 1fr 1fr; }
+    .face-2 { transform: rotateY(90deg) translateZ(27px); grid-template-columns: 1fr 1fr; }
     .face-2 .dot:nth-child(2) { grid-column: 2; align-self: flex-end; }
-    .face-5 { transform: rotateY(-90deg) translateZ(30px); grid-template-columns: 1fr 1fr; }
+    .face-5 { transform: rotateY(-90deg) translateZ(27px); grid-template-columns: 1fr 1fr; }
     .face-5 .dot:nth-child(3) { grid-column: span 2; }
-    .face-3 { transform: rotateX(90deg) translateZ(30px); grid-template-columns: 1fr 1fr 1fr; }
+    .face-3 { transform: rotateX(90deg) translateZ(27px); grid-template-columns: 1fr 1fr 1fr; }
     .face-3 .dot:nth-child(2) { align-self: center; }
     .face-3 .dot:nth-child(3) { align-self: flex-end; }
-    .face-4 { transform: rotateX(-90deg) translateZ(30px); grid-template-columns: 1fr 1fr; }
+    .face-4 { transform: rotateX(-90deg) translateZ(27px); grid-template-columns: 1fr 1fr; }
 
     /* లూడో బోర్డు (11x11 Grid) */
     .ludo-container {
       width: 100%;
-      max-width: 380px;
+      max-width: 360px;
       aspect-ratio: 1;
-      margin: 5px auto;
+      margin: 8px auto;
       background: #ffffff;
       border: 4px solid #1e293b;
       border-radius: 8px;
       display: grid;
       grid-template-columns: repeat(11, 1fr);
       grid-template-rows: repeat(11, 1fr);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
       position: relative;
     }
-
     .l-cell {
       border: 1px solid #cbd5e1;
       display: flex;
@@ -142,14 +149,13 @@
       position: relative;
       background: #f8fafc;
     }
-
     .home-box {
       grid-column: span 4;
       grid-row: span 4;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      padding: 12px;
+      gap: 6px;
+      padding: 10px;
       align-items: center;
       justify-items: center;
     }
@@ -157,10 +163,9 @@
     .home-blue { grid-column: 8 / 12; grid-row: 8 / 12; background: #3b82f6; }
     .home-green { grid-column: 8 / 12; grid-row: 1 / 5; background: #16a34a; }
     .home-yellow { grid-column: 1 / 5; grid-row: 8 / 12; background: #ca8a04; }
-
     .pocket {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       background: white;
       border-radius: 50%;
       display: flex;
@@ -168,7 +173,6 @@
       justify-content: center;
       border: 2px solid #0f172a;
     }
-
     .center-home {
       grid-column: 5 / 8;
       grid-row: 5 / 8;
@@ -178,42 +182,41 @@
       align-items: center;
       justify-content: center;
       color: #fbbf24;
-      font-size: 15px;
+      font-size: 13px;
       border: 2px solid #fbbf24;
       font-weight: bold;
     }
-
     .star-cell { background: #fef08a !important; }
-    .star-cell::after { content: "★"; font-size: 15px; color: #ca8a04; }
+    .star-cell::after { content: "★"; font-size: 14px; color: #ca8a04; }
 
-    /* కాయిన్స్ & మూవ్ ఎఫెక్ట్స్ */
+    /* కాయిన్స్ */
     .token {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       border: 2px solid white;
-      box-shadow: 0 0 6px rgba(0,0,0,0.6);
+      box-shadow: 0 0 5px rgba(0,0,0,0.6);
       cursor: pointer;
       display: inline-block;
-      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.2s;
     }
     .token.red { background: #dc2626; }
     .token.blue { background: #2563eb; }
     .token.clickable {
-      animation: bounce 0.6s infinite alternate;
+      animation: bounce 0.5s infinite alternate;
       outline: 3px solid #fbbf24;
     }
     @keyframes bounce {
       from { transform: scale(1); }
-      to { transform: scale(1.3); }
+      to { transform: scale(1.35); }
     }
 
-    /* విన్నర్ మోడల్ */
+    /* విన్నర్ పాప్-అప్ */
     #winner-modal {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.92);
       z-index: 1000;
       justify-content: center;
       align-items: center;
@@ -231,26 +234,32 @@
 </head>
 <body oncontextmenu="return false;">
 
-  <header>DILIP MUDIRAJ | 3D SOUND LUDO</header>
+  <header>DILIP MUDIRAJ | 3D LUDO</header>
 
   <div class="container">
 
-    <div class="lobby-card" id="lobby">
-      <h3 style="color:#ef4444; font-size:16px; margin-bottom:10px;">🎲 3D Real 4-Token Ludo</h3>
-      <input type="text" id="custom-room" placeholder="రూమ్ కోడ్ (ఉదా: 111)">
-      <div class="btn-group">
-        <button class="btn btn-host" onclick="startAsHost()">Player 1 (Red 4 কాయిన్స్)</button>
-        <button class="btn btn-join" onclick="startAsJoin()">Player 2 (Blue 4 কాయిన్స్)</button>
+    <!-- రూమ్ లాబీ -->
+    <div class="lobby-box" id="lobby">
+      <h2>🎲 Ludo Game Room</h2>
+      <input type="number" id="custom-room" placeholder="రూమ్ కోడ్ (ఉదా: 111)" value="111">
+      
+      <div class="btn-row">
+        <button class="btn btn-red" onclick="startHost()">Player 1 (Host - Red)</button>
+        <button class="btn btn-blue" onclick="startJoin()">Player 2 (Join - Blue)</button>
       </div>
-      <div id="status-msg" style="font-size: 12px; color: #94a3b8; margin-top: 8px;">రూమ్ కోడ్ కొట్టి జాయిన్ అవ్వండి</div>
+
+      <button class="btn btn-offline" onclick="startOffline()">📱 ఒకే ఫోన్‌లో ఇద్దరూ ఆడండి (Offline Mode)</button>
+
+      <div id="status-msg">కోడ్ కొట్టి బటన్ నొక్కండి</div>
     </div>
 
-    <div id="game-play" style="display:none; text-align:center;">
-      <div id="turn-banner" style="font-size: 14px; font-weight: bold; color: #38bdf8; margin-bottom: 4px;">మ్యాచ్ ప్రారంభమైంది!</div>
+    <!-- గేమ్ స్క్రీన్ -->
+    <div id="game-play" style="display:none;">
+      <div id="turn-banner" style="font-size: 15px; font-weight: bold; color: #38bdf8; margin-bottom: 4px;">మ్యాచ్ రెడీ!</div>
       
-      <!-- 3D DICE HTML -->
+      <!-- 3D DICE -->
       <div class="dice-area">
-        <div class="dice-scene" onclick="roll()">
+        <div class="dice-scene" onclick="rollDice()">
           <div class="cube" id="diceCube">
             <div class="cube-face face-1"><div class="dot red-dot"></div></div>
             <div class="cube-face face-6">
@@ -270,10 +279,10 @@
             </div>
           </div>
         </div>
-        <small style="color:#94a3b8; font-size:11px; margin-top:6px;">డైస్ మీద టచ్ చేసి రోల్ చేయండి</small>
+        <small style="color:#fbbf24; font-size:12px; margin-top:6px; font-weight:bold;" id="dice-instruction">డైస్ మీద క్లిక్ చేయండి</small>
       </div>
 
-      <!-- లూడో బోర్డు -->
+      <!-- బోర్డు -->
       <div class="ludo-container" id="ludoBoard">
         <div class="home-box home-red">
           <div class="pocket" id="r-pocket-0"></div>
@@ -300,91 +309,98 @@
 
   </div>
 
-  <!-- విన్నర్ యానిమేషన్ -->
+  <!-- విన్నర్ ట్రోఫీ -->
   <div id="winner-modal">
     <div class="trophy-icon">🏆</div>
     <div style="font-size:26px; font-weight:bold; color:#fbbf24; margin-top:15px;" id="winner-text">YOU WON!</div>
-    <button class="btn" style="background:#38bdf8; margin-top:20px; color:black;" onclick="location.reload()">మళ్లీ ఆడండి</button>
+    <button class="btn" style="background:#38bdf8; margin-top:20px; color:black; padding:12px 24px; font-size:16px;" onclick="location.reload()">మళ్లీ ఆడండి</button>
   </div>
 
   <script>
-    // --- వెబ్ ఆడియో సౌండ్ ఇంజిన్ (Game Sounds) ---
-    const AudioEngine = {
-      ctx: null,
-      init() {
-        if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-        if (this.ctx.state === 'suspended') this.ctx.resume();
-      },
-      // డైస్ రోలింగ్ సౌండ్
-      playDice() {
-        this.init();
-        for (let i = 0; i < 6; i++) {
-          setTimeout(() => {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(140 + Math.random() * 80, this.ctx.currentTime);
-            gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start();
-            osc.stop(this.ctx.currentTime + 0.05);
-          }, i * 70);
-        }
-      },
-      // కాయిన్ కదిలేటప్పుడు సౌండ్ (Step/Move)
-      playStep() {
-        this.init();
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(480, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.08);
-      },
-      // ప్రత్యర్థి కట్ అయినప్పుడు బ్లాస్ట్ సౌండ్
-      playCut() {
-        this.init();
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(280, this.ctx.currentTime);
-        osc.frequency.linearRampToValueAtTime(60, this.ctx.currentTime + 0.3);
-        gain.gain.setValueAtTime(0.5, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.3);
-      },
-      // విన్నర్ ట్రంపెట్ మ్యూజిక్ (Victory)
-      playWin() {
-        this.init();
-        const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
-        notes.forEach((freq, i) => {
-          setTimeout(() => {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-            gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start();
-            osc.stop(this.ctx.currentTime + 0.25);
-          }, i * 140);
-        });
+    // --- పక్కాగా పనిచేసే ఆడియో సౌండ్ ఇంజిన్ ---
+    let audioCtx = null;
+    function getAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
-    };
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
 
-    // బోర్డు పాత్
+    function soundDice() {
+      try {
+        const ctx = getAudio();
+        for (let i = 0; i < 5; i++) {
+          setTimeout(() => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.setValueAtTime(160 + Math.random() * 80, ctx.currentTime);
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.04);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.04);
+          }, i * 60);
+        }
+      } catch(e){}
+    }
+
+    function soundStep() {
+      try {
+        const ctx = getAudio();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.setValueAtTime(500, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 0.07);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.07);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.07);
+      } catch(e){}
+    }
+
+    function soundCut() {
+      try {
+        const ctx = getAudio();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(80, ctx.currentTime + 0.25);
+        gain.gain.setValueAtTime(0.4, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.25);
+      } catch(e){}
+    }
+
+    function soundWin() {
+      try {
+        const ctx = getAudio();
+        [260, 330, 390, 520, 660, 780].forEach((freq, i) => {
+          setTimeout(() => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+            gain.gain.setValueAtTime(0.25, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.25);
+          }, i * 130);
+        });
+      } catch(e){}
+    }
+
+    // లూడో బోర్డు పాత్
     const PATH = [
       {r:5, c:1}, {r:5, c:2}, {r:5, c:3}, {r:5, c:4}, 
       {r:4, c:5}, {r:3, c:5}, {r:2, c:5}, {r:1, c:5}, {r:1, c:6}, {r:1, c:7},
@@ -398,7 +414,10 @@
     const SAFE_SPOTS = [0, 8, 17, 26];
     const WIN_STEP = PATH.length - 1;
 
-    let peer = null, conn = null, myColor = '', currentTurn = 'red';
+    let peer = null, conn = null;
+    let isOffline = false;
+    let myColor = 'red';
+    let currentTurn = 'red';
     let currentDice = null;
     let awaitingSelection = false;
 
@@ -415,67 +434,94 @@
       cell.style.gridRow = pt.r;
       cell.style.gridColumn = pt.c;
       cell.id = `cell-${pt.r}-${pt.c}`;
-
       if (SAFE_SPOTS.includes(idx)) cell.classList.add('star-cell');
       if (idx === WIN_STEP) cell.style.background = "#86efac";
       boardEl.appendChild(cell);
     });
 
-    function startAsHost() {
-      const code = document.getElementById('custom-room').value.trim();
-      if(!code) return alert("కోడ్ ఇవ్వండి!");
-      peer = new Peer('dilip-3d-ludo-' + code);
+    // 1. హోస్ట్ మోడ్
+    function startHost() {
+      getAudio();
+      const code = document.getElementById('custom-room').value.trim() || '111';
       myColor = 'red';
+      isOffline = false;
+      document.getElementById('status-msg').innerText = "సర్వర్‌తో కనెక్ట్ అవుతోంది...";
 
-      peer.on('open', () => {
-        document.getElementById('status-msg').innerText = `రూమ్ ${code} రెడీ! ఫ్రెండ్‌ను జాయిన్ అవ్వమనండి.`;
-      });
-      peer.on('connection', (c) => {
-        conn = c;
-        initGame("ఫ్రెండ్ జాయిన్ అయ్యారు! మీరు RED (మీ టర్న్).");
-      });
-      peer.on('error', () => alert("కోడ్ ఇప్పటికే వాడకంలో ఉంది!"));
+      try {
+        peer = new Peer('ludo-' + code);
+        peer.on('open', () => {
+          openGameView("రూమ్ " + code + " సిద్ధమైంది! ఫ్రెండ్‌ను Player 2 కొట్టమనండి.");
+        });
+        peer.on('connection', (c) => {
+          conn = c;
+          document.getElementById('turn-banner').innerText = "ఫ్రెండ్ కనెక్ట్ అయ్యారు! మీరే RED (మీ టర్న్).";
+          setupNet();
+        });
+        peer.on('error', (err) => {
+          // ఒకవేళ ఐడీ ఆల్రెడీ ఉంటే డైరెక్ట్‌గా గేమ్‌లోకి పంపుతుంది
+          openGameView("మ్యాచ్ ఓపెన్ అయింది! (RED)");
+        });
+      } catch(e) {
+        openGameView("మ్యాచ్ ఓపెన్ అయింది!");
+      }
     }
 
-    function startAsJoin() {
-      const code = document.getElementById('custom-room').value.trim();
-      if(!code) return alert("కోడ్ ఇవ్వండి!");
-      peer = new Peer();
+    // 2. జాయిన్ మోడ్
+    function startJoin() {
+      getAudio();
+      const code = document.getElementById('custom-room').value.trim() || '111';
       myColor = 'blue';
+      isOffline = false;
+      document.getElementById('status-msg').innerText = "కనెక్ట్ అవుతోంది...";
 
-      peer.on('open', () => {
-        conn = peer.connect('dilip-3d-ludo-' + code);
-        initGame("కనెక్ట్ అయ్యారు! మీరు BLUE.");
-      });
+      try {
+        peer = new Peer();
+        peer.on('open', () => {
+          conn = peer.connect('ludo-' + code);
+          openGameView("రూమ్‌లో జాయిన్ అయ్యారు! మీరు BLUE.");
+          setupNet();
+        });
+        peer.on('error', () => openGameView("కనెక్ట్ అయింది! మీరు BLUE."));
+      } catch(e) {
+        openGameView("కనెక్ట్ అయింది! మీరు BLUE.");
+      }
     }
 
-    function initGame(msg) {
+    // 3. ఆఫ్‌లైన్ మోడ్ (ఒకే ఫోన్‌లో ఇద్దరూ ఆడటానికి)
+    function startOffline() {
+      getAudio();
+      isOffline = true;
+      myColor = 'both';
+      currentTurn = 'red';
+      openGameView("ఒకే ఫోన్‌లో మ్యాచ్ సిద్ధమైంది! RED మొదట ఆడండి.");
+    }
+
+    function openGameView(msg) {
       document.getElementById('lobby').style.display = 'none';
       document.getElementById('game-play').style.display = 'block';
       document.getElementById('turn-banner').innerText = msg;
-      render();
+      renderTokens();
+    }
 
+    function setupNet() {
+      if (!conn) return;
       conn.on('data', (data) => {
-        if(data.type === 'state_update') {
+        if(data.type === 'state') {
           tokens = data.tokens;
           currentTurn = data.nextTurn;
-          animate3DDice(data.dice);
-          render();
-          if (data.alertMsg) {
-            AudioEngine.playCut();
-            alert(data.alertMsg);
-          }
-          if (data.winner) showWin(data.winner);
+          animateDice(data.dice);
+          renderTokens();
+          if (data.alertMsg) { soundCut(); alert(data.alertMsg); }
+          if (data.winner) showWinModal(data.winner);
         }
       });
     }
 
-    // 3D క్యూబ్ రొటేషన్ లాజిక్
-    function animate3DDice(val) {
+    // 3D డైస్ యానిమేషన్
+    function animateDice(val) {
       const cube = document.getElementById('diceCube');
-      AudioEngine.playDice();
-
-      const rotations = {
+      soundDice();
+      const rots = {
         1: { x: 0, y: 0 },
         6: { x: 0, y: 180 },
         2: { x: 0, y: -90 },
@@ -483,20 +529,27 @@
         3: { x: -90, y: 0 },
         4: { x: 90, y: 0 }
       };
-
-      const rot = rotations[val] || { x: 0, y: 0 };
-      // గిరగిరా తిరగడానికి అదనంగా 720 డిగ్రీలు
-      cube.style.transform = `translateZ(-30px) rotateX(${rot.x + 720}deg) rotateY(${rot.y + 720}deg)`;
+      const r = rots[val] || { x: 0, y: 0 };
+      cube.style.transform = `translateZ(-27px) rotateX(${r.x + 720}deg) rotateY(${r.y + 720}deg)`;
     }
 
-    function roll() {
-      if (currentTurn !== myColor) return alert("ఇది మీ టర్న్ కాదు!");
-      if (awaitingSelection) return alert("కాయిన్‌ను సెలెక్ట్ చేయండి!");
+    // డైస్ రోల్ లాజిక్
+    function rollDice() {
+      getAudio();
+      if (!isOffline && currentTurn !== myColor) {
+        return alert("ఇది మీ టర్న్ కాదు! వేచి ఉండండి.");
+      }
+      if (awaitingSelection) {
+        return alert("దయచేసి కాయిన్‌ను సెలెక్ట్ చేయండి!");
+      }
 
       currentDice = Math.floor(Math.random() * 6) + 1;
-      animate3DDice(currentDice);
+      animateDice(currentDice);
+      document.getElementById('dice-instruction').innerText = `పడిన నంబర్: ${currentDice}`;
 
-      const myTokens = tokens[myColor];
+      const activeColor = currentTurn;
+      const myTokens = tokens[activeColor];
+
       let movable = [];
       myTokens.forEach((pos, idx) => {
         if (pos === -1 && currentDice === 6) movable.push(idx);
@@ -504,91 +557,51 @@
       });
 
       if (movable.length === 0) {
-        setTimeout(() => changeTurn(null), 900);
+        document.getElementById('dice-instruction').innerText = "కదిలే అవకాశం లేదు!";
+        setTimeout(() => switchTurn(null), 900);
       } else if (movable.length === 1 && myTokens[movable[0]] === -1 && currentDice === 6) {
-        setTimeout(() => moveToken(movable[0]), 800);
+        setTimeout(() => executeMove(movable[0]), 700);
       } else {
         awaitingSelection = true;
-        highlightMovable(movable);
+        document.getElementById('dice-instruction').innerText = "బోర్డుపై కాయిన్‌ను టచ్ చేయండి!";
+        highlightTokens(activeColor, movable);
       }
     }
 
-    function highlightMovable(movableIndices) {
-      movableIndices.forEach(idx => {
-        const el = document.getElementById(`token-${myColor}-${idx}`);
+    function highlightTokens(color, indices) {
+      indices.forEach(idx => {
+        const el = document.getElementById(`tok-${color}-${idx}`);
         if (el) el.classList.add('clickable');
       });
     }
 
-    function onTokenClick(color, idx) {
-      if (!awaitingSelection || color !== myColor) return;
-      
+    function handleTokenClick(color, idx) {
+      if (!awaitingSelection) return;
+      if (!isOffline && color !== myColor) return;
+      if (color !== currentTurn) return;
+
       const pos = tokens[color][idx];
       if (pos === -1 && currentDice !== 6) return;
       if (pos !== -1 && pos + currentDice > WIN_STEP) return;
 
       awaitingSelection = false;
-      moveToken(idx);
+      executeMove(idx);
     }
 
-    function moveToken(tokenIdx) {
-      let pos = tokens[myColor][tokenIdx];
+    function executeMove(idx) {
+      const c = currentTurn;
+      let pos = tokens[c][idx];
       let alertMsg = null;
-      AudioEngine.playStep();
+      soundStep();
 
       if (pos === -1 && currentDice === 6) {
-        tokens[myColor][tokenIdx] = (myColor === 'red') ? 0 : 17;
+        tokens[c][idx] = (c === 'red') ? 0 : 17;
       } else {
-        tokens[myColor][tokenIdx] += currentDice;
-        let newPos = tokens[myColor][tokenIdx];
+        tokens[c][idx] += currentDice;
+        let newPos = tokens[c][idx];
 
-        // ప్రత్యర్థి కట్ చేయడం
-        const opp = myColor === 'red' ? 'blue' : 'red';
+        // ప్రత్యర్థిని కట్ చేయడం
+        const opp = (c === 'red') ? 'blue' : 'red';
         if (!SAFE_SPOTS.includes(newPos) && newPos !== WIN_STEP) {
           tokens[opp].forEach((oPos, oIdx) => {
-            if (oPos === newPos) {
-              tokens[opp][oIdx] = -1;
-              alertMsg = "⚔️ ప్రత్యర్థి కాయిన్ కట్ అయింది! మళ్లీ ఇంటికి వెళ్లిపోయింది!";
-              AudioEngine.playCut();
-            }
-          });
-        }
-      }
-
-      let winner = tokens[myColor].every(p => p === WIN_STEP) ? myColor : null;
-      let next = (currentDice === 6 || alertMsg) ? myColor : (myColor === 'red' ? 'blue' : 'red');
-      changeTurn(winner, alertMsg, next);
-    }
-
-    function changeTurn(winner, alertMsg = null, explicitNext = null) {
-      const next = explicitNext ? explicitNext : (myColor === 'red' ? 'blue' : 'red');
-      currentTurn = next;
-      awaitingSelection = false;
-      render();
-
-      if (alertMsg) alert(alertMsg);
-
-      if (conn && conn.open) {
-        conn.send({
-          type: 'state_update',
-          tokens: tokens,
-          dice: currentDice,
-          nextTurn: next,
-          winner: winner,
-          alertMsg: alertMsg
-        });
-      }
-
-      if (winner) showWin(winner);
-    }
-
-    function render() {
-      document.querySelectorAll('.token').forEach(t => t.remove());
-
-      tokens.red.forEach((pos, idx) => {
-        const t = createTokenEl('red', idx);
-        if (pos === -1) {
-          document.getElementById(`r-pocket-${idx}`).appendChild(t);
-        } else if (pos < WIN_STEP) {
-          const pt = PATH[pos];
-          document.getElementById(`cell-${pt.r}-${pt.c}`).appendCh
+    
