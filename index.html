@@ -3,27 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dilip Mudiraj | Real Ludo</title>
+  <title>Dilip Mudiraj | Online Real Ludo</title>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-    body { background: #0b0f19; color: #f8fafc; text-align: center; padding-bottom: 30px; user-select: none; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background: #0b0f19; color: #f8fafc; text-align: center; padding-bottom: 40px; user-select: none; }
     header { background: #111827; padding: 12px; font-size: 18px; font-weight: bold; color: #38bdf8; border-bottom: 1px solid #1f2937; }
     .container { max-width: 380px; margin: 10px auto; padding: 0 10px; }
 
-    /* డైస్ సెక్షన్ */
-    .dice-box { margin: 15px 0; }
-    .dice-btn {
-      background: #fbbf24; color: #000; font-size: 20px; font-weight: bold;
-      border: none; padding: 12px 28px; border-radius: 8px; cursor: pointer;
-      box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
-    }
-    #turn-txt { font-size: 16px; font-weight: bold; color: #ef4444; margin-bottom: 8px; }
+    /* రూమ్ బాక్స్ */
+    .lobby-box { background: #111827; border-radius: 12px; padding: 16px; border: 2px solid #ef4444; margin-bottom: 15px; }
+    input { width: 80%; padding: 10px; border-radius: 8px; border: 2px solid #ef4444; background: #0b0f19; color: #38bdf8; font-size: 20px; font-weight: bold; text-align: center; margin-bottom: 12px; outline: none; }
+    .btn-row { display: flex; gap: 8px; justify-content: center; }
+    .btn { padding: 10px 16px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; }
+    .btn-red { background: #dc2626; color: white; }
+    .btn-blue { background: #2563eb; color: white; }
 
-    /* లూడో బోర్డు */
+    /* డైస్ సెక్షన్ */
+    .dice-box { margin: 10px 0; }
+    .dice-btn { background: #fbbf24; color: #000; font-size: 18px; font-weight: bold; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4); }
+    #turn-txt { font-size: 15px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; }
+
+    /* లూడో బోర్డు (11x11 Grid) */
     .board {
       width: 100%; max-width: 340px; aspect-ratio: 1; margin: 0 auto;
       background: #fff; border: 4px solid #1e293b; border-radius: 8px;
       display: grid; grid-template-columns: repeat(11, 1fr); grid-template-rows: repeat(11, 1fr);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
     }
     .cell { border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; position: relative; background: #f8fafc; }
     
@@ -34,46 +44,85 @@
     .home-yellow { grid-column: 1 / 5; grid-row: 8 / 12; background: #ca8a04; }
 
     .pocket { width: 24px; height: 24px; background: white; border-radius: 50%; border: 2px solid #000; display: flex; align-items: center; justify-content: center; }
-    .center-home { grid-column: 5 / 8; grid-row: 5 / 8; background: #0f172a; color: #fbbf24; font-size: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid #fbbf24; font-weight: bold; }
+    .center-home { grid-column: 5 / 8; grid-row: 5 / 8; background: #0f172a; color: #fbbf24; font-size: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #fbbf24; font-weight: bold; }
     .star { background: #fef08a !important; }
     .star::after { content: "★"; color: #ca8a04; font-size: 14px; }
 
     /* కాయిన్స్ */
-    .token { width: 18px; height: 18px; border-radius: 50%; border: 2px solid white; cursor: pointer; }
+    .token { width: 19px; height: 19px; border-radius: 50%; border: 2px solid white; cursor: pointer; transition: transform 0.2s; }
     .token.red { background: #dc2626; }
     .token.blue { background: #2563eb; }
     .clickable { outline: 3px solid #fbbf24; animation: pulse 0.5s infinite alternate; }
-    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.3); } }
+    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.35); } }
+
+    /* విన్నర్ పాప్-అప్ */
+    #winner-modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.92); z-index: 1000;
+      justify-content: center; align-items: center; flex-direction: column;
+    }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-  <header>DILIP MUDIRAJ | REAL LUDO</header>
+  <header>DILIP MUDIRAJ | ONLINE 4-TOKEN LUDO</header>
 
   <div class="container">
-    <div class="dice-box">
-      <div id="turn-txt">🔴 RED టర్న్ - డైస్ వేయండి</div>
-      <button class="dice-btn" id="rollBtn" onclick="roll()">🎲 Roll Dice: <span id="diceVal">-</span></button>
-      <div id="msg" style="color:#38bdf8; font-size:13px; margin-top:6px; min-height:18px;"></div>
+
+    <div class="lobby-box" id="lobby">
+      <h3 style="color:#ef4444; font-size:16px; margin-bottom:10px;">🎲 Online Room Setup</h3>
+      <input type="number" id="custom-room" placeholder="రూమ్ కోడ్" value="111">
+      <div class="btn-row">
+        <button class="btn btn-red" onclick="joinLudo('red')">Player 1 (Host - Red)</button>
+        <button class="btn btn-blue" onclick="joinLudo('blue')">Player 2 (Join - Blue)</button>
+      </div>
+      <div id="status-msg" style="margin-top:10px; font-size:12px; color:#38bdf8;">సేమ్ కోడ్ కొట్టి ఇద్దరూ కలవండి</div>
     </div>
 
-    <div class="board" id="ludoBoard">
-      <div class="home home-red">
-        <div class="pocket" id="rp-0"></div><div class="pocket" id="rp-1"></div>
-        <div class="pocket" id="rp-2"></div><div class="pocket" id="rp-3"></div>
+    <div id="game-play" style="display:none;">
+      <div class="dice-box">
+        <div id="turn-txt">కనెక్ట్ అవుతోంది...</div>
+        <button class="dice-btn" id="rollBtn" onclick="roll()">🎲 Roll Dice: <span id="diceVal">-</span></button>
+        <div id="msg" style="color:#fbbf24; font-size:13px; margin-top:6px; min-height:18px;"></div>
       </div>
-      <div class="home home-green"></div>
-      <div class="home home-yellow"></div>
-      <div class="home home-blue">
-        <div class="pocket" id="bp-0"></div><div class="pocket" id="bp-1"></div>
-        <div class="pocket" id="bp-2"></div><div class="pocket" id="bp-3"></div>
+
+      <div class="board" id="ludoBoard">
+        <div class="home home-red">
+          <div class="pocket" id="rp-0"></div><div class="pocket" id="rp-1"></div>
+          <div class="pocket" id="rp-2"></div><div class="pocket" id="rp-3"></div>
+        </div>
+        <div class="home home-green"></div>
+        <div class="home home-yellow"></div>
+        <div class="home home-blue">
+          <div class="pocket" id="bp-0"></div><div class="pocket" id="bp-1"></div>
+          <div class="pocket" id="bp-2"></div><div class="pocket" id="bp-3"></div>
+        </div>
+        <div class="center-home">
+          🏆 HOME
+          <div style="font-size:10px; margin-top:3px;" id="home-count">R:0 | B:0</div>
+        </div>
       </div>
-      <div class="center-home">🏆</div>
     </div>
+
+  </div>
+
+  <div id="winner-modal">
+    <div style="font-size:80px;">🏆</div>
+    <div style="font-size:24px; font-weight:bold; color:#fbbf24; margin-top:15px;" id="winner-text">YOU WON!</div>
+    <button class="btn" style="background:#38bdf8; margin-top:20px; color:black; padding:12px 24px; font-size:16px;" onclick="location.reload()">మళ్లీ ఆడండి</button>
   </div>
 
   <script>
-    // బోర్డు గడుల మ్యాప్
+    // పబ్లిక్ క్లౌడ్ రియల్‌టైమ్ డేటాబేస్ కనెక్షన్
+    const firebaseConfig = {
+      databaseURL: "https://ludo-realtime-free-default-rtdb.firebaseio.com"
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
+    // బోర్డు పాత్
     const PATH = [
       {r:5, c:1}, {r:5, c:2}, {r:5, c:3}, {r:5, c:4}, {r:4, c:5}, {r:3, c:5}, {r:2, c:5}, {r:1, c:5},
       {r:1, c:6}, {r:1, c:7}, {r:2, c:7}, {r:3, c:7}, {r:4, c:7}, {r:5, c:8}, {r:5, c:9}, {r:5, c:10},
@@ -84,16 +133,23 @@
 
     const SAFE = [0, 8, 17, 26];
     const WIN = PATH.length - 1;
-    let turn = 'red';
-    let dice = 0;
-    let selecting = false;
 
-    let tokens = {
-      red: [-1, -1, -1, -1],
-      blue: [-1, -1, -1, -1]
+    let myRole = '';
+    let roomRef = null;
+    let selecting = false;
+    let currentDice = 0;
+
+    let gameState = {
+      turn: 'red',
+      dice: 0,
+      tokens: {
+        red: [-1, -1, -1, -1],
+        blue: [-1, -1, -1, -1]
+      },
+      winner: null
     };
 
-    // బోర్డు తయారీ
+    // గడులు రెండర్
     const b = document.getElementById('ludoBoard');
     PATH.forEach((p, i) => {
       const el = document.createElement('div');
@@ -106,97 +162,154 @@
       b.appendChild(el);
     });
 
-    render();
+    function joinLudo(role) {
+      const room = document.getElementById('custom-room').value.trim() || '111';
+      myRole = role;
+
+      document.getElementById('lobby').style.display = 'none';
+      document.getElementById('game-play').style.display = 'block';
+
+      roomRef = db.ref('ludo_rooms/' + room);
+
+      if (role === 'red') {
+        // హోస్ట్ రూమ్ ఇనిషియలైజ్ చేస్తారు
+        roomRef.set(gameState);
+      }
+
+      // రియల్ టైమ్ సింకింగ్ లిజనర్ (ఒకరి మొబైల్ మార్పులు ఇంకొకరికి తక్షణమే వస్తాయి)
+      roomRef.on('value', (snap) => {
+        const val = snap.val();
+        if (val) {
+          gameState = val;
+          currentDice = gameState.dice;
+          document.getElementById('diceVal').innerText = gameState.dice || '-';
+          updateBanner();
+          render();
+          if (gameState.winner) {
+            showWin(gameState.winner);
+          }
+        }
+      });
+    }
+
+    function updateBanner() {
+      const t = gameState.turn;
+      const isMyTurn = (t === myRole);
+      const txt = document.getElementById('turn-txt');
+      txt.innerText = (t === 'red' ? "🔴 RED" : "🔵 BLUE") + (isMyTurn ? " (మీ టర్న్ - డైస్ వేయండి)" : " (ఫ్రెండ్ టర్న్)");
+      txt.style.color = (t === 'red') ? '#ef4444' : '#3b82f6';
+    }
 
     function roll() {
-      if (selecting) return;
-      dice = Math.floor(Math.random() * 6) + 1;
-      document.getElementById('diceVal').innerText = dice;
+      if (gameState.turn !== myRole) {
+        return alert("ఇది మీ టర్న్ కాదు! ఫ్రెండ్ ఆడే వరకు ఆగండి.");
+      }
+      if (selecting) {
+        return alert("కాయిన్‌ను టచ్ చేయండి!");
+      }
 
-      let toks = tokens[turn];
+      const rollVal = Math.floor(Math.random() * 6) + 1;
+      currentDice = rollVal;
+
+      const myToks = gameState.tokens[myRole];
       let movable = [];
-      toks.forEach((p, idx) => {
-        if (p === -1 && dice === 6) movable.push(idx);
-        else if (p !== -1 && p + dice <= WIN) movable.push(idx);
+      myToks.forEach((p, idx) => {
+        if (p === -1 && rollVal === 6) movable.push(idx);
+        else if (p !== -1 && p + rollVal <= WIN) movable.push(idx);
       });
 
       if (movable.length === 0) {
-        document.getElementById('msg').innerText = "కదిలే కాయిన్ లేదు!";
-        setTimeout(nextTurn, 700);
-      } else if (movable.length === 1 && toks[movable[0]] === -1 && dice === 6) {
-        move(movable[0]);
+        document.getElementById('msg').innerText = "కదిలే అవకాశం లేదు!";
+        setTimeout(() => {
+          changeTurn(rollVal, gameState.tokens, (myRole === 'red' ? 'blue' : 'red'));
+        }, 800);
+      } else if (movable.length === 1 && myToks[movable[0]] === -1 && rollVal === 6) {
+        moveToken(movable[0], rollVal);
       } else {
         selecting = true;
-        document.getElementById('msg').innerText = "బోర్డుపై కాయిన్ టచ్ చేయండి";
+        document.getElementById('msg').innerText = "కాయిన్‌ను సెలెక్ట్ చేయండి";
         movable.forEach(idx => {
-          document.getElementById('t-' + turn + '-' + idx).classList.add('clickable');
+          const el = document.getElementById('t-' + myRole + '-' + idx);
+          if (el) el.classList.add('clickable');
         });
       }
     }
 
     function clickToken(col, idx) {
-      if (!selecting || col !== turn) return;
+      if (!selecting || col !== myRole) return;
       selecting = false;
-      move(idx);
+      document.getElementById('msg').innerText = "";
+      moveToken(idx, currentDice);
     }
 
-    function move(idx) {
-      let p = tokens[turn][idx];
-      if (p === -1 && dice === 6) {
-        tokens[turn][idx] = (turn === 'red') ? 0 : 17;
+    function moveToken(idx, diceVal) {
+      let toks = JSON.parse(JSON.stringify(gameState.tokens));
+      let p = toks[myRole][idx];
+
+      if (p === -1 && diceVal === 6) {
+        toks[myRole][idx] = (myRole === 'red') ? 0 : 17;
       } else {
-        tokens[turn][idx] += dice;
-        let np = tokens[turn][idx];
-        let opp = turn === 'red' ? 'blue' : 'red';
+        toks[myRole][idx] += diceVal;
+        let np = toks[myRole][idx];
+        let opp = (myRole === 'red') ? 'blue' : 'red';
+
+        // ప్రత్యర్థి కట్ చేయడం
         if (!SAFE.includes(np) && np !== WIN) {
-          tokens[opp].forEach((op, oi) => {
+          toks[opp].forEach((op, oi) => {
             if (op === np) {
-              tokens[opp][oi] = -1;
-              alert("⚔️ ప్రత్యర్థి కాయిన్ కట్ అయింది!");
+              toks[opp][oi] = -1;
+              alert("⚔️ ప్రత్యర్థి కాయిన్ కట్ అయింది! మళ్లీ ఇంటికి వెళ్లిపోయింది!");
             }
           });
         }
       }
 
-      if (tokens[turn].every(x => x === WIN)) {
-        alert("🏆 " + turn.toUpperCase() + " గెలిచారు!");
-        location.reload();
-        return;
-      }
+      // విన్నర్ చెక్
+      let win = toks[myRole].every(x => x === WIN) ? myRole : null;
+      let nextTurn = (diceVal === 6) ? myRole : (myRole === 'red' ? 'blue' : 'red');
 
-      if (dice !== 6) nextTurn();
-      else {
-        document.getElementById('msg').innerText = "6 పడింది! ఇంకో ఛాన్స్ వచ్చింది!";
-        render();
-      }
+      changeTurn(diceVal, toks, nextTurn, win);
     }
 
-    function nextTurn() {
-      turn = turn === 'red' ? 'blue' : 'red';
+    function changeTurn(diceVal, updatedToks, nextTurn, win = null) {
       selecting = false;
-      document.getElementById('msg').innerText = "";
-      const tTxt = document.getElementById('turn-txt');
-      tTxt.innerText = (turn === 'red' ? "🔴 RED" : "🔵 BLUE") + " టర్న్ - డైస్ వేయండి";
-      tTxt.style.color = turn === 'red' ? '#ef4444' : '#3b82f6';
-      render();
+      roomRef.update({
+        dice: diceVal,
+        tokens: updatedToks,
+        turn: nextTurn,
+        winner: win
+      });
     }
 
     function render() {
       document.querySelectorAll('.token').forEach(e => e.remove());
       ['red', 'blue'].forEach(col => {
-        tokens[col].forEach((p, idx) => {
+        gameState.tokens[col].forEach((p, idx) => {
           const t = document.createElement('div');
           t.className = 'token ' + col;
           t.id = 't-' + col + '-' + idx;
           t.onclick = () => clickToken(col, idx);
+
           if (p === -1) {
-            document.getElementById((col === 'red' ? 'rp-' : 'bp-') + idx).appendChild(t);
+            const hBox = document.getElementById((col === 'red' ? 'rp-' : 'bp-') + idx);
+            if (hBox) hBox.appendChild(t);
           } else if (p < WIN) {
             const pt = PATH[p];
-            document.getElementById('c-' + pt.r + '-' + pt.c).appendChild(t);
+            const cBox = document.getElementById('c-' + pt.r + '-' + pt.c);
+            if (cBox) cBox.appendChild(t);
           }
         });
       });
+
+      const rH = gameState.tokens.red.filter(p => p === WIN).length;
+      const bH = gameState.tokens.blue.filter(p => p === WIN).length;
+      document.getElementById('home-count').innerText = `R:${rH}/4 | B:${bH}/4`;
+    }
+
+    function showWin(winnerRole) {
+      document.getElementById('winner-modal').style.display = 'flex';
+      document.getElementById('winner-text').innerHTML = (winnerRole === myRole) ? "🏆 అభినందనలు!<br>మీరే విజేత!" : `🏆 ${winnerRole.toUpperCase()} గెలిచారు!`;
+      confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
     }
   </script>
 </body>
