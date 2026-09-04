@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dilip Mudiraj | Real Ludo Arena</title>
+  <title>Dilip Mudiraj | Real 4-Token Ludo Arena</title>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   
@@ -30,7 +30,6 @@
     }
     .container { max-width: 440px; margin: 15px auto; padding: 0 10px; }
 
-    /* లాబీ బాక్స్ */
     .lobby-card {
       background: #111827;
       border-radius: 12px;
@@ -64,7 +63,7 @@
     .btn-host { background: #ef4444; color: white; }
     .btn-join { background: #3b82f6; color: white; }
 
-    /* రియల్ లూడో బోర్డు (Square Grid) */
+    /* లూడో బోర్డు (Square Grid: 11x11) */
     .ludo-container {
       width: 100%;
       max-width: 380px;
@@ -87,74 +86,80 @@
       justify-content: center;
       position: relative;
       background: #f8fafc;
-      font-size: 10px;
-      font-weight: bold;
-      color: #475569;
     }
 
     /* హోమ్ ఏరియాలు */
     .home-box {
       grid-column: span 4;
       grid-row: span 4;
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 12px;
       align-items: center;
-      justify-content: center;
-      padding: 8px;
+      justify-items: center;
     }
     .home-red { grid-column: 1 / 5; grid-row: 1 / 5; background: #ef4444; }
     .home-blue { grid-column: 8 / 12; grid-row: 8 / 12; background: #3b82f6; }
-    .home-green { grid-column: 8 / 12; grid-row: 1 / 5; background: #22c55e; }
-    .home-yellow { grid-column: 1 / 5; grid-row: 8 / 12; background: #eab308; }
+    .home-green { grid-column: 8 / 12; grid-row: 1 / 5; background: #16a34a; }
+    .home-yellow { grid-column: 1 / 5; grid-row: 8 / 12; background: #ca8a04; }
 
-    .inner-base {
-      width: 75%;
-      height: 75%;
+    .pocket {
+      width: 28px;
+      height: 28px;
       background: white;
-      border-radius: 8px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      font-size: 13px;
-      color: #1e293b;
+      border: 2px solid #0f172a;
     }
 
-    /* సెంటర్ విన్నింగ్ హోమ్ */
+    /* సెంటర్ హోమ్ */
     .center-home {
       grid-column: 5 / 8;
       grid-row: 5 / 8;
       background: #0f172a;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       color: #fbbf24;
-      font-size: 20px;
+      font-size: 16px;
       border: 2px solid #fbbf24;
+      font-weight: bold;
     }
 
-    /* సేఫ్ స్టార్ & కలర్ జోన్లు */
+    /* సేఫ్ స్టార్ జోన్లు */
     .star-cell { background: #fef08a !important; }
-    .star-cell::after { content: "★"; font-size: 14px; color: #ca8a04; }
+    .star-cell::after { content: "★"; font-size: 15px; color: #ca8a04; }
 
     /* కాయిన్స్ */
     .token {
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      position: absolute;
-      border: 2.5px solid white;
-      box-shadow: 0 0 8px rgba(0,0,0,0.5);
-      z-index: 10;
-      transition: all 0.25s ease;
+      border: 2px solid white;
+      box-shadow: 0 0 6px rgba(0,0,0,0.6);
+      cursor: pointer;
+      display: inline-block;
+      transition: transform 0.2s;
     }
     .token.red { background: #dc2626; }
     .token.blue { background: #2563eb; }
+    .token.clickable {
+      animation: bounce 0.6s infinite alternate;
+      outline: 3px solid #fbbf24;
+    }
+    @keyframes bounce {
+      from { transform: scale(1); }
+      to { transform: scale(1.25); }
+    }
 
-    /* డైస్ కంట్రోల్స్ */
     .btn-dice {
       background: #fbbf24;
       color: black;
-      font-size: 17px;
+      font-size: 18px;
       padding: 12px;
       width: 100%;
       border-radius: 8px;
@@ -186,42 +191,52 @@
 </head>
 <body oncontextmenu="return false;">
 
-  <header>DILIP MUDIRAJ | REAL LUDO</header>
+  <header>DILIP MUDIRAJ | 4-TOKEN LUDO</header>
 
   <div class="container">
 
-    <!-- రూమ్ లాబీ -->
     <div class="lobby-card" id="lobby">
-      <h3 style="color:#ef4444; font-size:16px; margin-bottom:10px;">🎲 Real 2-Player Ludo Board</h3>
+      <h3 style="color:#ef4444; font-size:16px; margin-bottom:10px;">🎲 Real 4-Token Ludo Board</h3>
       <input type="text" id="custom-room" placeholder="రూమ్ కోడ్ (ఉదా: 111)">
       <div class="btn-group">
-        <button class="btn btn-host" onclick="startAsHost()">Player 1 (Red)</button>
-        <button class="btn btn-join" onclick="startAsJoin()">Player 2 (Blue)</button>
+        <button class="btn btn-host" onclick="startAsHost()">Player 1 (Red 4 কాయిన్స్)</button>
+        <button class="btn btn-join" onclick="startAsJoin()">Player 2 (Blue 4 কాయిన్స్)</button>
       </div>
       <div id="status-msg" style="font-size: 12px; color: #94a3b8; margin-top: 8px;">ఒకే కోడ్ కొట్టి ఇద్దరూ జాయిన్ అవ్వండి</div>
     </div>
 
-    <!-- గేమ్ ప్లే -->
     <div id="game-play" style="display:none; text-align:center;">
       <div id="turn-banner" style="font-size: 14px; font-weight: bold; color: #38bdf8; margin-bottom: 6px;">మ్యాచ్ ప్రారంభమైంది!</div>
       <button class="btn btn-dice" id="dice-btn" onclick="roll()">🎲 Roll Dice: <span id="dice-val">-</span></button>
       
-      <!-- రియల్ లూడో బోర్డు -->
       <div class="ludo-container" id="ludoBoard">
-        <!-- 4 మూలల హోమ్ బాక్స్‌లు -->
-        <div class="home-box home-red"><div class="inner-base">🔴 RED</div></div>
-        <div class="home-box home-green"><div class="inner-base">🟢</div></div>
-        <div class="home-box home-yellow"><div class="inner-base">🟡</div></div>
-        <div class="home-box home-blue"><div class="inner-base">🔵 BLUE</div></div>
+        <!-- రెడ్ హోమ్ (4 పాకెట్స్) -->
+        <div class="home-box home-red">
+          <div class="pocket" id="r-pocket-0"></div>
+          <div class="pocket" id="r-pocket-1"></div>
+          <div class="pocket" id="r-pocket-2"></div>
+          <div class="pocket" id="r-pocket-3"></div>
+        </div>
+        <div class="home-box home-green"></div>
+        <div class="home-box home-yellow"></div>
         
-        <!-- సెంటర్ ట్రయాంగిల్ / హోమ్ -->
-        <div class="center-home">🏆</div>
+        <!-- బ్లూ హోమ్ (4 పాకెట్స్) -->
+        <div class="home-box home-blue">
+          <div class="pocket" id="b-pocket-0"></div>
+          <div class="pocket" id="b-pocket-1"></div>
+          <div class="pocket" id="b-pocket-2"></div>
+          <div class="pocket" id="b-pocket-3"></div>
+        </div>
+        
+        <div class="center-home">
+          🏆 HOME
+          <div style="font-size:10px; margin-top:4px;" id="home-count">R:0 | B:0</div>
+        </div>
       </div>
     </div>
 
   </div>
 
-  <!-- విన్నర్ ట్రోఫీ పాప్-అప్ -->
   <div id="winner-modal">
     <div class="trophy-icon">🏆</div>
     <div style="font-size:26px; font-weight:bold; color:#fbbf24; margin-top:15px;" id="winner-text">YOU WON!</div>
@@ -229,7 +244,7 @@
   </div>
 
   <script>
-    // లూడో బోర్డు చుట్టూ తిరిగే రియల్ పాత్ కోఆర్డినేట్స్ (Grid: 11x11)
+    // బోర్డు పాత్
     const PATH = [
       {r:5, c:1}, {r:5, c:2}, {r:5, c:3}, {r:5, c:4}, 
       {r:4, c:5}, {r:3, c:5}, {r:2, c:5}, {r:1, c:5}, {r:1, c:6}, {r:1, c:7},
@@ -237,34 +252,40 @@
       {r:6, c:11}, {r:7, c:11}, {r:7, c:10}, {r:7, c:9}, {r:7, c:8},
       {r:8, c:7}, {r:9, c:7}, {r:10, c:7}, {r:11, c:7}, {r:11, c:6}, {r:11, c:5},
       {r:10, c:5}, {r:9, c:5}, {r:8, c:5}, {r:7, c:4}, {r:7, c:3}, {r:7, c:2}, {r:7, c:1},
-      {r:6, c:1}, // సెంటర్ హోమ్ ఎంట్రీ
-      {r:6, c:2}, {r:6, c:3}, {r:6, c:4}, {r:6, c:5} // WIN గడి
+      {r:6, c:1}, {r:6, c:2}, {r:6, c:3}, {r:6, c:4}, {r:6, c:5}
     ];
 
-    const SAFE_SPOTS = [0, 8, 17, 26]; // స్టార్ సేఫ్ జోన్లు
-    const TOTAL_STEPS = PATH.length - 1;
+    const SAFE_SPOTS = [0, 8, 17, 26];
+    const WIN_STEP = PATH.length - 1;
 
     let peer = null, conn = null, myColor = '', currentTurn = 'red';
-    let positions = { red: 0, blue: 17 }; // రెడ్ ఒకవైపు, బ్లూ ఇంకోవైపు స్టార్ట్ అవుతాయి
+    let currentDice = null;
+    let awaitingSelection = false;
 
-    // గడులను క్రియేట్ చేయడం
+    // ప్రతి ప్లేయర్‌కి 4 కాయిన్స్ (-1 అంటే హోమ్‌లో ఉన్నట్లు, WIN_STEP అంటే లోపలికి చేరినట్లు)
+    let tokens = {
+      red: [-1, -1, -1, -1],
+      blue: [-1, -1, -1, -1]
+    };
+
+    // గడులు రెండర్ చేయడం
     const boardEl = document.getElementById('ludoBoard');
     PATH.forEach((pt, idx) => {
       const cell = document.createElement('div');
       cell.className = 'l-cell';
       cell.style.gridRow = pt.r;
       cell.style.gridColumn = pt.c;
-      cell.id = 'cell-' + pt.r + '-' + pt.c;
+      cell.id = `cell-${pt.r}-${pt.c}`;
 
       if (SAFE_SPOTS.includes(idx)) cell.classList.add('star-cell');
-      if (idx === TOTAL_STEPS) cell.style.background = "#86efac";
+      if (idx === WIN_STEP) cell.style.background = "#86efac";
       boardEl.appendChild(cell);
     });
 
     function startAsHost() {
       const code = document.getElementById('custom-room').value.trim();
       if(!code) return alert("కోడ్ ఇవ్వండి!");
-      peer = new Peer('dilip-real-ludo-' + code);
+      peer = new Peer('dilip-4token-ludo-' + code);
       myColor = 'red';
 
       peer.on('open', () => {
@@ -274,7 +295,7 @@
         conn = c;
         initGame("ఫ్రెండ్ జాయిన్ అయ్యారు! మీరు RED (ఫస్ట్ టర్న్).");
       });
-      peer.on('error', () => alert("ఈ కోడ్ ఇప్పటికే వాడకంలో ఉంది. వేరే కోడ్ వాడండి."));
+      peer.on('error', () => alert("కోడ్ ఇప్పటికే వాడకంలో ఉంది!"));
     }
 
     function startAsJoin() {
@@ -284,8 +305,8 @@
       myColor = 'blue';
 
       peer.on('open', () => {
-        conn = peer.connect('dilip-real-ludo-' + code);
-        initGame("రూమ్‌లో జాయిన్ అయ్యారు! మీరు BLUE.");
+        conn = peer.connect('dilip-4token-ludo-' + code);
+        initGame("కనెక్ట్ అయ్యారు! మీరు BLUE.");
       });
     }
 
@@ -296,8 +317,8 @@
       render();
 
       conn.on('data', (data) => {
-        if(data.type === 'move') {
-          positions = data.positions;
+        if(data.type === 'state_update') {
+          tokens = data.tokens;
           currentTurn = data.nextTurn;
           document.getElementById('dice-val').innerText = data.dice;
           render();
@@ -309,40 +330,98 @@
 
     function roll() {
       if (currentTurn !== myColor) return alert("ఇది మీ టర్న్ కాదు!");
+      if (awaitingSelection) return alert("కాయిన్‌ను సెలెక్ట్ చేయండి!");
 
-      const rollVal = Math.floor(Math.random() * 6) + 1;
-      document.getElementById('dice-val').innerText = rollVal;
+      currentDice = Math.floor(Math.random() * 6) + 1;
+      document.getElementById('dice-val').innerText = currentDice;
 
-      let pos = positions[myColor];
+      const myTokens = tokens[myColor];
+      // కదలడానికి అవకాశం ఉన్న కాయిన్స్ చెక్ చేయడం
+      let movable = [];
+      myTokens.forEach((pos, idx) => {
+        if (pos === -1 && currentDice === 6) movable.push(idx);
+        else if (pos !== -1 && pos + currentDice <= WIN_STEP) movable.push(idx);
+      });
+
+      if (movable.length === 0) {
+        // కదిలించడానికి ఏ కాయిన్ లేకపోతే టర్న్ చేంజ్
+        setTimeout(() => {
+          changeTurn(null);
+        }, 800);
+      } else if (movable.length === 1 && myTokens[movable[0]] === -1 && currentDice === 6) {
+        // ఒకటే కాయిన్ ఇంట్లో ఉండి 6 పడితే ఆటోమేటిక్‌గా ఓపెన్ అవ్వడం
+        moveToken(movable[0]);
+      } else {
+        awaitingSelection = true;
+        highlightMovable(movable);
+      }
+    }
+
+    function highlightMovable(movableIndices) {
+      movableIndices.forEach(idx => {
+        const el = document.getElementById(`token-${myColor}-${idx}`);
+        if (el) el.classList.add('clickable');
+      });
+    }
+
+    function onTokenClick(color, idx) {
+      if (!awaitingSelection || color !== myColor) return;
+      
+      const pos = tokens[color][idx];
+      if (pos === -1 && currentDice !== 6) return;
+      if (pos !== -1 && pos + currentDice > WIN_STEP) return;
+
+      awaitingSelection = false;
+      moveToken(idx);
+    }
+
+    function moveToken(tokenIdx) {
+      let pos = tokens[myColor][tokenIdx];
       let alertMsg = null;
 
-      if (pos + rollVal <= TOTAL_STEPS) {
-        pos += rollVal;
-
-        // కట్ రూల్ (సేఫ్ స్టార్ జోన్ కాకపోతే ప్రత్యర్థి కట్ అవుతారు)
-        const opponent = myColor === 'red' ? 'blue' : 'red';
-        if (!SAFE_SPOTS.includes(pos) && pos === positions[opponent] && pos !== TOTAL_STEPS) {
-          positions[opponent] = (opponent === 'red') ? 0 : 17; // ప్రారంభ స్థానానికి పడిపోతారు
-          alertMsg = "⚔️ కాయిన్ కట్! ప్రత్యర్థి మొదటి స్థానానికి పడిపోయారు!";
-        }
-
-        positions[myColor] = pos;
+      if (pos === -1 && currentDice === 6) {
+        // స్టార్ట్ పాయింట్‌కి తేవడం
+        tokens[myColor][tokenIdx] = (myColor === 'red') ? 0 : 17;
       } else {
-        alertMsg = "ఎక్కువ పడింది! సరిగ్గా సరిపోయే నంబర్ కావాలి.";
+        tokens[myColor][tokenIdx] += currentDice;
+        let newPos = tokens[myColor][tokenIdx];
+
+        // ప్రత్యర్థి కాయిన్ కట్ చేయడం
+        const opp = myColor === 'red' ? 'blue' : 'red';
+        if (!SAFE_SPOTS.includes(newPos) && newPos !== WIN_STEP) {
+          tokens[opp].forEach((oPos, oIdx) => {
+            if (oPos === newPos) {
+              tokens[opp][oIdx] = -1; // ప్రత్యర్థిని మళ్లీ హోమ్‌కి పంపడం
+              alertMsg = "⚔️ బూమ్! ప్రత్యర్థి కాయిన్ కట్ అయింది! మళ్లీ ఇంటికి వెళ్లిపోయింది!";
+            }
+          });
+        }
       }
 
-      let winner = (positions[myColor] === TOTAL_STEPS) ? myColor : null;
-      const next = myColor === 'red' ? 'blue' : 'red';
+      // విన్నర్ చెక్ (4 కాయిన్స్ హోమ్‌కి చేరాయా?)
+      let winner = null;
+      if (tokens[myColor].every(p => p === WIN_STEP)) {
+        winner = myColor;
+      }
+
+      // 6 పడితే లేదా కట్ చేస్తే మళ్లీ అదే ప్లేయర్‌కి టర్న్
+      let next = (currentDice === 6 || alertMsg) ? myColor : (myColor === 'red' ? 'blue' : 'red');
+      changeTurn(winner, alertMsg, next);
+    }
+
+    function changeTurn(winner, alertMsg = null, explicitNext = null) {
+      const next = explicitNext ? explicitNext : (myColor === 'red' ? 'blue' : 'red');
       currentTurn = next;
+      awaitingSelection = false;
       render();
 
       if (alertMsg) alert(alertMsg);
 
       if (conn && conn.open) {
         conn.send({
-          type: 'move',
-          dice: rollVal,
-          positions: positions,
+          type: 'state_update',
+          tokens: tokens,
+          dice: currentDice,
           nextTurn: next,
           winner: winner,
           alertMsg: alertMsg
@@ -353,33 +432,51 @@
     }
 
     function render() {
+      // పాత కాయిన్స్ క్లియర్ చేయడం
       document.querySelectorAll('.token').forEach(t => t.remove());
 
-      // రెడ్ కాయిన్
-      const rPt = PATH[positions.red];
-      const rCell = document.getElementById(`cell-${rPt.r}-${rPt.c}`);
-      if (rCell) {
-        const t = document.createElement('div');
-        t.className = 'token red';
-        rCell.appendChild(t);
-      }
+      // రెడ్ 4 కాయిన్స్ రెండర్
+      tokens.red.forEach((pos, idx) => {
+        const t = createTokenEl('red', idx);
+        if (pos === -1) {
+          document.getElementById(`r-pocket-${idx}`).appendChild(t);
+        } else if (pos < WIN_STEP) {
+          const pt = PATH[pos];
+          document.getElementById(`cell-${pt.r}-${pt.c}`).appendChild(t);
+        }
+      });
 
-      // బ్లూ కాయిన్
-      const bPt = PATH[positions.blue];
-      const bCell = document.getElementById(`cell-${bPt.r}-${bPt.c}`);
-      if (bCell) {
-        const t = document.createElement('div');
-        t.className = 'token blue';
-        bCell.appendChild(t);
-      }
+      // బ్లూ 4 కాయిన్స్ రెండర్
+      tokens.blue.forEach((pos, idx) => {
+        const t = createTokenEl('blue', idx);
+        if (pos === -1) {
+          document.getElementById(`b-pocket-${idx}`).appendChild(t);
+        } else if (pos < WIN_STEP) {
+          const pt = PATH[pos];
+          document.getElementById(`cell-${pt.r}-${pt.c}`).appendChild(t);
+        }
+      });
+
+      // సెంటర్ హోమ్ స్కోర్ కౌంట్
+      const rHome = tokens.red.filter(p => p === WIN_STEP).length;
+      const bHome = tokens.blue.filter(p => p === WIN_STEP).length;
+      document.getElementById('home-count').innerText = `R:${rHome}/4 | B:${bHome}/4`;
 
       document.getElementById('turn-banner').innerText = `టర్న్: ${currentTurn.toUpperCase()} ${currentTurn === myColor ? '(మీరు ఆడండి)' : '(ఫ్రెండ్ టర్న్)'}`;
     }
 
+    function createTokenEl(color, idx) {
+      const t = document.createElement('div');
+      t.className = `token ${color}`;
+      t.id = `token-${color}-${idx}`;
+      t.onclick = () => onTokenClick(color, idx);
+      return t;
+    }
+
     function showWin(w) {
       document.getElementById('winner-modal').style.display = 'flex';
-      document.getElementById('winner-text').innerHTML = (w === myColor) ? "🏆 అద్భుతం!<br>మీరే విన్నర్!" : `🏆 ${w.toUpperCase()} గెలిచారు!`;
-      confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+      document.getElementById('winner-text').innerHTML = (w === myColor) ? "🏆 అద్భుతమైన విజయం!<br>మీ 4 కాయిన్స్ హోమ్ చేరాయి!" : `🏆 ${w.toUpperCase()} గెలిచారు!`;
+      confetti({ particleCount: 220, spread: 110, origin: { y: 0.6 } });
     }
 
     document.addEventListener('contextmenu', e => e.preventDefault());
